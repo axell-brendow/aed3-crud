@@ -17,6 +17,11 @@ public class Arquivo<T extends Registro>
     public RandomAccessFile arquivo;
 
     /**
+     * Index do arquivo
+     */
+    public RandomAccessFile arquivoIndexId;
+
+    /**
      * Construtor da classe genérica
      */
     private Constructor<T> construtor;
@@ -37,12 +42,15 @@ public class Arquivo<T extends Registro>
         construtor = _construtor;
         nomeArquivo = _nomeArquivo;
 
+        T obj = construtor.newInstance();
+
         File d = new File("dados"); // Diretório para o arquivo
 
         if(!d.exists())
             d.mkdir();
 
-        arquivo = new RandomAccessFile("dados/" + nomeArquivo, "rw"); // Abrir o arquivo
+        arquivo        = new RandomAccessFile("dados/" + nomeArquivo, "rw"); // Abrir o arquivo
+        arquivoIndexId = new RandomAccessFile("dados/" + obj.getTableName() + "_idIndex.db", "rw"); // Abrir o arquivo de index
 
         // Se o arquivo for menor do que o tamanho do cabeçalho, logo não possuir cabeçalho
         // Escreve 0 para representar o último ID utilizado
@@ -80,7 +88,11 @@ public class Arquivo<T extends Registro>
             
             arquivo.seek(0);
             arquivo.writeInt(ultimoID);
+
+            inserirIndex(_obj.getID(), _pos);
         }
+        else
+            alterarIndex(_obj.getID(), _pos);
         
         arquivo.seek(_pos);
 
@@ -150,21 +162,27 @@ public class Arquivo<T extends Registro>
         int size;
         T obj = null;
 
-        while(arquivo.getFilePointer() < arquivo.length())
+        long pos = getPosicao(_id);
+
+        if (pos > 0)
         {
-            obj = construtor.newInstance();
+            arquivo.seek(pos);
+            
             lapide = arquivo.readByte();
-            size = arquivo.readInt();
 
-            byteArray = new byte[size];
+            if (lapide == ' ')
+            {
+                obj = construtor.newInstance();
 
-            arquivo.read(byteArray);
-            obj.fromByteArray(byteArray);
+                size = arquivo.readInt();
 
-            if(lapide == ' ' && obj.getID() == _id)
+                byteArray = new byte[size];
+
+                arquivo.read(byteArray);
+                obj.fromByteArray(byteArray);
+
                 return obj;
-
-            arquivo.skipBytes(arquivo.readInt()); // Pular o lixo
+            }
         }
 
         return null;
@@ -213,6 +231,56 @@ public class Arquivo<T extends Registro>
     }
 
     /**
+     * Insere novo registro no arquivo de index
+     * @param _id ID do registro
+     * @param _pos Posição do registro
+     * @throws Exception
+     */
+    public void inserirIndex(int _id, long _pos) throws Exception
+    {
+        arquivoIndexId.seek(arquivoIndexId.length());
+
+        arquivoIndexId.writeInt(_id);
+        arquivoIndexId.writeLong(_pos);
+    }
+
+    /**
+     * Altera posição de um registro armazenada no index
+     * @param _id ID do registro
+     * @param _newPos Nova posição do registro
+     * @return Se conseguiu fazer a alteração
+     */
+    public boolean alterarIndex(int _id, long _newPos) throws Exception
+    {
+        long fileSize = arquivoIndexId.length() / 12;
+        long blockSize = fileSize / 2;
+        long indexPos  = blockSize;
+        int idLido = -1;
+
+        while (blockSize != 0)
+        {
+            arquivoIndexId.seek(indexPos * 12);
+            idLido = arquivoIndexId.readInt();
+
+            blockSize /= 2;
+
+            if (idLido > _id)
+                indexPos -= blockSize;
+            else if (idLido < _id)
+                indexPos += blockSize;
+            else
+                break;
+        }
+
+        if (idLido != _id)
+            return false;
+
+        arquivoIndexId.writeLong(_newPos);
+
+        return true;
+    }
+
+    /**
      * Recupera a posição de um registro
      * @param _id ID do registro
      * @return Posição do registro
@@ -220,28 +288,30 @@ public class Arquivo<T extends Registro>
      */
     public long getPosicao(int _id) throws Exception
     {
-        arquivo.seek(HEADER_SIZE);
-        
-        byte lapide;
-        int size;
-        int id;
-        long endereco = -1;
+        if (_id < 1) return -1;
 
-        while(arquivo.getFilePointer() < arquivo.length())
+        long startPos = 0;
+        long endPos   = arquivoIndexId.length() / 12;
+        long indexPos = 0;
+        int idLido    = -1;
+
+        while (_id           != idLido &&
+               startPos      <= endPos &&
+               indexPos * 12 < arquivoIndexId.length() - 12)
         {
-            endereco = arquivo.getFilePointer();
-            lapide   = arquivo.readByte();
-            size     = arquivo.readInt();
-            id       = arquivo.readInt();
+            indexPos = startPos + ((endPos - startPos) / 2);
 
-            if(lapide == ' ' && id == _id)
-                return endereco;
-            
-            arquivo.seek(endereco + size + 5);
-            arquivo.skipBytes(arquivo.readInt()); // Pular o lixo
+            arquivoIndexId.seek(indexPos * 12);
+            idLido = arquivoIndexId.readInt();
+
+            if      (_id < idLido) endPos   = indexPos - 1;
+            else if (idLido < _id) startPos = indexPos + 1;
         }
 
-        return -1;
+        if (idLido != _id)
+            return -1;
+
+        return arquivoIndexId.readLong();
     }
 
     /**
