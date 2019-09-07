@@ -39,7 +39,7 @@ public class Arquivo<T extends Registro>
 
         File d = new File("dados"); // Diretório para o arquivo
 
-        if( !d.exists() )
+        if(!d.exists())
             d.mkdir();
 
         arquivo = new RandomAccessFile("dados/" + nomeArquivo, "rw"); // Abrir o arquivo
@@ -80,8 +80,8 @@ public class Arquivo<T extends Registro>
     // Método apenas para testes, pois geralmente a memória principal raramente
     // será suficiente para manter todos os registros simultaneamente
     /**
-     * Array os registros do arquivo
-     * @return Lista com os objetos
+     * Lista os registros do arquivo
+     * @return Array com os registros
      * @throws Exception
      */
     public Object[] listar() throws Exception
@@ -132,7 +132,6 @@ public class Arquivo<T extends Registro>
 
         while(arquivo.getFilePointer() < arquivo.length())
         {
-
             obj = construtor.newInstance();
             lapide = arquivo.readByte();
             size = arquivo.readInt();
