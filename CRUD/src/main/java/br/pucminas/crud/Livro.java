@@ -26,7 +26,7 @@ public class Livro implements Registro
     /**
      * Nome da tabela
      */
-    private String tableName = "livros";
+    private static final String TABLE_NAME = "livros";
    
     /**
      * Cria um novo livro vazio
@@ -73,13 +73,40 @@ public class Livro implements Registro
     }
 
     /**
+     * Título
+     * @return Título
+     */
+    public String getTitulo()
+    {
+        return titulo;
+    }
+
+    /**
+     * Autor
+     * @return Autor
+     */
+    public String getAutor()
+    {
+        return autor;    
+    }
+
+    /**
+     * Preço
+     * @return Preço
+     */
+    public float getPreco()
+    {
+        return preco;    
+    }
+
+    /**
      * Recupera o nome da tabela
      * @return String com o nome da tabela
      */
     @Override
     public String getTableName()
     {
-        return tableName;
+        return TABLE_NAME;
     }
     
     public String toString() 
@@ -99,10 +126,12 @@ public class Livro implements Registro
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
+
         dos.writeInt(id);
         dos.writeUTF(titulo);
         dos.writeUTF(autor);
-        dos.writeFloat(preco);        
+        dos.writeFloat(preco);  
+
         return baos.toByteArray();
     }
 
@@ -115,6 +144,7 @@ public class Livro implements Registro
     {
         ByteArrayInputStream bais = new ByteArrayInputStream(_byteData);
         DataInputStream dis = new DataInputStream(bais);
+        
         id = dis.readInt();
         titulo = dis.readUTF();
         autor = dis.readUTF();

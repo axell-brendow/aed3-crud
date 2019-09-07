@@ -39,16 +39,23 @@ public class CRUD
                     opcao = -1;
                 }
 
-                switch(opcao)
+                try
                 {
-                    case 1: listarLivro();  break;
-                    case 2: buscarLivro();  break;
-                    case 3: incluirLivro(); break;
-                    case 4: excluirLivro(); break;
-                    case 5: alterarLivro(); break;
-                    case 9: povoar();       break;
-                    case 0:                 break;
-                    default: System.out.println("Opção inválida");
+                    switch(opcao)
+                    {
+                        case 1: listarLivro();  break;
+                        case 2: buscarLivro();  break;
+                        case 3: incluirLivro(); break;
+                        case 4: excluirLivro(); break;
+                        case 5: alterarLivro(); break;
+                        case 9: povoar();       break;
+                        case 0:                 break;
+                        default: System.out.println("Opção inválida");
+                    }
+                } 
+                catch (Exception e)
+                {
+                    System.out.println("Valor não reconhecido.");
                 }
 
                 if (opcao != 0)
@@ -106,6 +113,7 @@ public class CRUD
     {
         String titulo, autor;
         float preco;
+        char confirma;
 
         System.out.println("\nINCLUSÃO");
 
@@ -116,10 +124,24 @@ public class CRUD
         autor = console.nextLine();
 
         System.out.print("Preço: ");
-        preco = Float.valueOf(console.nextLine());
+        try
+        {
+            preco = Float.valueOf(console.nextLine());
+        }
+        catch (Exception e)
+        {
+            preco = 0;
+        }
 
         System.out.print("\nConfirma inclusão? ");
-        char confirma = console.nextLine().charAt(0);
+        try
+        {
+            confirma = console.nextLine().charAt(0);
+        }
+        catch (Exception e)
+        {
+            confirma = 'n';
+        } 
 
         if(confirma == 's' || confirma == 'S')
         {
@@ -136,6 +158,7 @@ public class CRUD
     public static void excluirLivro() throws Exception
     {
         int id;
+        char confirma;
 
         System.out.println("\nEXCLUSÃO");
 
@@ -150,7 +173,14 @@ public class CRUD
         {
             System.out.println(l);
             System.out.print("\nConfirma exclusão? ");
-            char confirma = console.nextLine().charAt(0);
+            try
+            {
+                confirma = console.nextLine().charAt(0);
+            }
+            catch (Exception e)
+            {
+                confirma = 'n';
+            } 
 
             if(confirma=='s' || confirma=='S')
                 if(arqLivros.excluir(id))
@@ -169,6 +199,8 @@ public class CRUD
         System.out.println("\nALTERAÇÃO");
         
         int id;
+        char confirma;
+
         System.out.print("ID: ");
 
         id = Integer.valueOf(console.nextLine());
@@ -191,15 +223,31 @@ public class CRUD
     
         System.out.print("Novo título: ");
         titulo = console.nextLine();
+        if (titulo == "") titulo = l.getTitulo();
     
         System.out.print("Novo autor: ");
         autor = console.nextLine();
+        if (autor == "") autor = l.getAutor();
     
         System.out.print("Novo preço: ");
-        preco = Float.valueOf(console.nextLine());
-    
+        try
+        {
+            preco = Float.valueOf(console.nextLine());
+        }
+        catch (Exception e)
+        {
+            preco = l.getPreco();
+        }
+        
         System.out.print("\nConfirma alteração? ");
-        char confirma = console.nextLine().charAt(0);
+        try
+        {
+            confirma = console.nextLine().charAt(0);
+        }
+        catch (Exception e)
+        {
+            confirma = 'n';
+        }        
     
         if(confirma == 's' || confirma == 'S')
         {
