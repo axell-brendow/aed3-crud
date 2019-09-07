@@ -16,6 +16,12 @@ public interface Registro {
     public void setID(int _id);
 
     /**
+     * Recupera o nome da tabela
+     * @return String com o nome da tabela
+     */
+    public String getTableName();
+
+    /**
      * Converte o registro em um array de bytes, com seus dados
      * @return O array de bytes
      * @throws IOException

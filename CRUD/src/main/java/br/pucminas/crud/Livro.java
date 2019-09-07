@@ -22,6 +22,11 @@ public class Livro implements Registro
      * Preço do livro
      */
     private float preco;
+
+    /**
+     * Nome da tabela
+     */
+    private String tableName = "livros";
    
     /**
      * Cria um novo livro vazio
@@ -65,6 +70,16 @@ public class Livro implements Registro
     public void setID(int _id)
     {
         id = _id;
+    }
+
+    /**
+     * Recupera o nome da tabela
+     * @return String com o nome da tabela
+     */
+    @Override
+    public String getTableName()
+    {
+        return tableName;
     }
     
     public String toString() 
