@@ -25,6 +25,7 @@ public class CRUD
                 System.out.println("2 - Buscar livro");
                 System.out.println("3 - Incluir livro");
                 System.out.println("4 - Excluir livro");
+                System.out.println("5 - Modificar livro");
                 System.out.println("9 - Povoar BD");
                 System.out.println("0 - Sair");
                 System.out.print("\nOpção: ");
@@ -44,6 +45,7 @@ public class CRUD
                     case 2: buscarLivro();  break;
                     case 3: incluirLivro(); break;
                     case 4: excluirLivro(); break;
+                    case 5: alterarLivro(); break;
                     case 9: povoar();       break;
                     case 0:                 break;
                     default: System.out.println("Opção inválida");
@@ -157,6 +159,59 @@ public class CRUD
         else
             System.out.println("Livro não encontrado");
     }
+
+    /**
+     * Altera um livro
+     * @throws Exception
+     */
+    public static void alterarLivro() throws Exception
+    {
+        System.out.println("\nALTERAÇÃO");
+        
+        int id;
+        System.out.print("ID: ");
+
+        id = Integer.valueOf(console.nextLine());
+        if (id <= 0) return;
+
+        Livro l = (Livro)arqLivros.buscar(id);
+
+        if(l != null)
+            System.out.println(l);
+        else
+        {
+            System.out.println("Livro não encontrado");
+            return;
+        }
+
+        System.out.println();
+
+        String titulo, autor;
+        float preco;
+    
+        System.out.print("Novo título: ");
+        titulo = console.nextLine();
+    
+        System.out.print("Novo autor: ");
+        autor = console.nextLine();
+    
+        System.out.print("Novo preço: ");
+        preco = Float.valueOf(console.nextLine());
+    
+        System.out.print("\nConfirma alteração? ");
+        char confirma = console.nextLine().charAt(0);
+    
+        if(confirma == 's' || confirma == 'S')
+        {
+            l = new Livro(titulo, autor, preco);
+            l.setID(id);
+
+            if (arqLivros.alterar(l))
+                System.out.println("Livro alterado com sucesso.");
+            else
+                System.out.println("Erro ao alterar livro.");
+        }
+    }
    
     /**
      * Gera uma lista de livros
@@ -169,7 +224,6 @@ public class CRUD
         arqLivros.incluir(new Livro("A Garota no Trem","Paula Hawkins",(float)20.9));
         arqLivros.incluir(new Livro("A Rainha Vermelha","Victoria Aveyard",(float)22.1));
         arqLivros.incluir(new Livro("O Sol É Para Todos","Harper Lee",(float)27));
-        /*
         arqLivros.incluir(new Livro("1984","George Orwell",(float)32.8));
         arqLivros.incluir(new Livro("A Odisséia","Homero",(float)35.9));
         arqLivros.incluir(new Livro("Sherlock Holmes","Arthur Conan Doyle",(float)24));
@@ -195,7 +249,6 @@ public class CRUD
         arqLivros.incluir(new Livro("O Demonologista","Andrew Pyper",(float)32.47));
         arqLivros.incluir(new Livro("O Último Policial","Ben Winters",(float)27.6));
         arqLivros.incluir(new Livro("A Febre","Megan Abbott",(float)27.9));   
-        */
     }
     
 }
