@@ -121,7 +121,7 @@ public class CRUD
 
         if(confirma == 's' || confirma == 'S')
         {
-            Livro l = new Livro(-1, titulo, autor, preco);
+            Livro l = new Livro(titulo, autor, preco);
             int id = arqLivros.incluir(l);
             System.out.println("Livro incluído com ID: " + id);
         }
@@ -164,37 +164,37 @@ public class CRUD
      */
     public static void povoar() throws Exception
     {
-        arqLivros.incluir(new Livro(-1,"O Pequeno Príncipe","Antoine de Saint-Exupéry",(float)27.9));
-        arqLivros.incluir(new Livro(-1,"Número Zero","Humberto Eco",(float)14.9));
-        arqLivros.incluir(new Livro(-1,"A Garota no Trem","Paula Hawkins",(float)20.9));
-        arqLivros.incluir(new Livro(-1,"A Rainha Vermelha","Victoria Aveyard",(float)22.1));
-        arqLivros.incluir(new Livro(-1,"O Sol É Para Todos","Harper Lee",(float)27));
+        arqLivros.incluir(new Livro("O Pequeno Príncipe","Antoine de Saint-Exupéry",(float)27.9));
+        arqLivros.incluir(new Livro("Número Zero","Humberto Eco",(float)14.9));
+        arqLivros.incluir(new Livro("A Garota no Trem","Paula Hawkins",(float)20.9));
+        arqLivros.incluir(new Livro("A Rainha Vermelha","Victoria Aveyard",(float)22.1));
+        arqLivros.incluir(new Livro("O Sol É Para Todos","Harper Lee",(float)27));
         /*
-        arqLivros.incluir(new Livro(-1,"1984","George Orwell",(float)32.8));
-        arqLivros.incluir(new Livro(-1,"A Odisséia","Homero",(float)35.9));
-        arqLivros.incluir(new Livro(-1,"Sherlock Holmes","Arthur Conan Doyle",(float)24));
-        arqLivros.incluir(new Livro(-1,"Joyland","Stephen King",(float)17.9));
-        arqLivros.incluir(new Livro(-1,"Objetos Cortantes","Gillian Flynn",(float)16.9));
-        arqLivros.incluir(new Livro(-1,"A Lista Negra","Jennifer Brown",(float)16.9));
-        arqLivros.incluir(new Livro(-1,"Garota Exemplar","Gillian Flynn",(float)14.9));
-        arqLivros.incluir(new Livro(-1,"O Iluminado","Stephen King",(float)14.9));
-        arqLivros.incluir(new Livro(-1,"Queda de Gigantes","Ken Follett",(float)23.67));
-        arqLivros.incluir(new Livro(-1,"Eternidade Por Um Fio","Ken Follett",(float)30.1));
-        arqLivros.incluir(new Livro(-1,"Inverno do Mundo","Ken Follett",(float)29.99));
-        arqLivros.incluir(new Livro(-1,"A Guerra dos Tronos","George R. R. Martin",(float)22.76));
-        arqLivros.incluir(new Livro(-1,"A Revolução dos Bichos","George Orwell",(float)27.36));
-        arqLivros.incluir(new Livro(-1,"O Mundo de Sofia","Jostein Gaarder",(float)28.2));
-        arqLivros.incluir(new Livro(-1,"O Velho e o Mar","Ernest Hemingway",(float)16.9));
-        arqLivros.incluir(new Livro(-1,"Escuridão Total Sem Estrelas","Stephen King",(float)28.4));
-        arqLivros.incluir(new Livro(-1,"O Pintassilgo","Donna Tartt",(float)21.63));
-        arqLivros.incluir(new Livro(-1,"Se Eu Ficar","Gayle Forman",(float)13.54));
-        arqLivros.incluir(new Livro(-1,"Toda Luz Que Não Podemos Ver","Anthony Doerr",(float)24.38));
-        arqLivros.incluir(new Livro(-1,"Eu, Você e a Garota Que Vai Morrer","Jesse Andrews",(float)14.9));
-        arqLivros.incluir(new Livro(-1,"Na Natureza Selvagem","Jon Krakauer",(float)14.9));
-        arqLivros.incluir(new Livro(-1,"Eu, Robô","Isaac Asimov",(float)20.15));
-        arqLivros.incluir(new Livro(-1,"O Demonologista","Andrew Pyper",(float)32.47));
-        arqLivros.incluir(new Livro(-1,"O Último Policial","Ben Winters",(float)27.6));
-        arqLivros.incluir(new Livro(-1,"A Febre","Megan Abbott",(float)27.9));   
+        arqLivros.incluir(new Livro("1984","George Orwell",(float)32.8));
+        arqLivros.incluir(new Livro("A Odisséia","Homero",(float)35.9));
+        arqLivros.incluir(new Livro("Sherlock Holmes","Arthur Conan Doyle",(float)24));
+        arqLivros.incluir(new Livro("Joyland","Stephen King",(float)17.9));
+        arqLivros.incluir(new Livro("Objetos Cortantes","Gillian Flynn",(float)16.9));
+        arqLivros.incluir(new Livro("A Lista Negra","Jennifer Brown",(float)16.9));
+        arqLivros.incluir(new Livro("Garota Exemplar","Gillian Flynn",(float)14.9));
+        arqLivros.incluir(new Livro("O Iluminado","Stephen King",(float)14.9));
+        arqLivros.incluir(new Livro("Queda de Gigantes","Ken Follett",(float)23.67));
+        arqLivros.incluir(new Livro("Eternidade Por Um Fio","Ken Follett",(float)30.1));
+        arqLivros.incluir(new Livro("Inverno do Mundo","Ken Follett",(float)29.99));
+        arqLivros.incluir(new Livro("A Guerra dos Tronos","George R. R. Martin",(float)22.76));
+        arqLivros.incluir(new Livro("A Revolução dos Bichos","George Orwell",(float)27.36));
+        arqLivros.incluir(new Livro("O Mundo de Sofia","Jostein Gaarder",(float)28.2));
+        arqLivros.incluir(new Livro("O Velho e o Mar","Ernest Hemingway",(float)16.9));
+        arqLivros.incluir(new Livro("Escuridão Total Sem Estrelas","Stephen King",(float)28.4));
+        arqLivros.incluir(new Livro("O Pintassilgo","Donna Tartt",(float)21.63));
+        arqLivros.incluir(new Livro("Se Eu Ficar","Gayle Forman",(float)13.54));
+        arqLivros.incluir(new Livro("Toda Luz Que Não Podemos Ver","Anthony Doerr",(float)24.38));
+        arqLivros.incluir(new Livro("Eu, Você e a Garota Que Vai Morrer","Jesse Andrews",(float)14.9));
+        arqLivros.incluir(new Livro("Na Natureza Selvagem","Jon Krakauer",(float)14.9));
+        arqLivros.incluir(new Livro("Eu, Robô","Isaac Asimov",(float)20.15));
+        arqLivros.incluir(new Livro("O Demonologista","Andrew Pyper",(float)32.47));
+        arqLivros.incluir(new Livro("O Último Policial","Ben Winters",(float)27.6));
+        arqLivros.incluir(new Livro("A Febre","Megan Abbott",(float)27.9));   
         */
     }
     
