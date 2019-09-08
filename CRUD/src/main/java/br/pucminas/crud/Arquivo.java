@@ -351,4 +351,79 @@ public class Arquivo<T extends Registro>
 
         return true;
     }
+
+    public void cleanup() throws Exception
+    {
+        ArrayList<byte[]> list;
+
+        byte[] buffer;
+        T obj;
+
+        byte lapide;
+        int size, lixoSize;
+
+        arquivo.seek(0);
+
+        buffer = new byte[HEADER_SIZE];
+        arquivo.read(buffer);
+
+        RandomAccessFile newArquivo = new RandomAccessFile("dados/tmp.db", "rw");
+        newArquivo.write(buffer);
+
+        while (arquivo.getFilePointer() < arquivo.length())
+        {
+            list    = new ArrayList<>();
+
+            for (int i = 0; i < 1024; i++)
+            {
+                lapide = arquivo.readByte();
+                size = arquivo.readInt();
+    
+                buffer = new byte[size];
+                arquivo.read(buffer);
+    
+                if (lapide == ' ')
+                {
+                    obj = construtor.newInstance();
+                    obj.fromByteArray(buffer);
+    
+                    list.add(buffer);
+                }
+                else i--;
+    
+                lixoSize = arquivo.readInt();
+                arquivo.skipBytes(lixoSize);
+
+                if (arquivo.getFilePointer() >= arquivo.length())
+                    break;
+            }
+
+            Object[] arr = list.toArray();
+
+            for (int i = 0; i < arr.length; i++)
+            {
+                buffer = (byte[])arr[i];
+
+                obj = construtor.newInstance();
+                obj.fromByteArray(buffer);
+
+                alterarIndex(obj.getID(), newArquivo.getFilePointer());
+
+                newArquivo.writeByte(' ');
+                newArquivo.writeInt(buffer.length);
+
+                newArquivo.write(buffer);
+
+                newArquivo.writeInt(0);
+            }
+        }
+
+        newArquivo.close();
+        arquivo.close();
+
+        File tmpF = new File("dados/tmp.db");
+        tmpF.renameTo(new File("dados/" + nomeArquivo));
+
+        arquivo = new RandomAccessFile("dados/" + nomeArquivo, "rw");
+    }
 }

@@ -26,6 +26,7 @@ public class CRUD
                 System.out.println("3 - Incluir livro");
                 System.out.println("4 - Excluir livro");
                 System.out.println("5 - Modificar livro");
+                System.out.println("6 - Limpar arquivo");
                 System.out.println("9 - Povoar BD");
                 System.out.println("0 - Sair");
                 System.out.print("\nOpção: ");
@@ -43,13 +44,14 @@ public class CRUD
                 {
                     switch(opcao)
                     {
-                        case 1: listarLivro();  break;
-                        case 2: buscarLivro();  break;
-                        case 3: incluirLivro(); break;
-                        case 4: excluirLivro(); break;
-                        case 5: alterarLivro(); break;
-                        case 9: povoar();       break;
-                        case 0:                 break;
+                        case 1: listarLivro();   break;
+                        case 2: buscarLivro();   break;
+                        case 3: incluirLivro();  break;
+                        case 4: excluirLivro();  break;
+                        case 5: alterarLivro();  break;
+                        case 6: limparArquivo(); break;
+                        case 9: povoar();        break;
+                        case 0:                  break;
                         default: System.out.println("Opção inválida");
                     }
                 } 
@@ -71,8 +73,21 @@ public class CRUD
         }        
     }    
     
+    public static void limparArquivo()
+    {
+        try
+        {
+            arqLivros.cleanup();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Lista livros gravados no arquivo
+     * 
      * @throws Exception
      */
     public static void listarLivro() throws Exception
@@ -223,11 +238,11 @@ public class CRUD
     
         System.out.print("Novo título: ");
         titulo = console.nextLine();
-        if (titulo == "") titulo = l.getTitulo();
+        if (titulo.isBlank()) titulo = l.getTitulo();
     
         System.out.print("Novo autor: ");
         autor = console.nextLine();
-        if (autor == "") autor = l.getAutor();
+        if (autor.isBlank()) autor = l.getAutor();
     
         System.out.print("Novo preço: ");
         try
