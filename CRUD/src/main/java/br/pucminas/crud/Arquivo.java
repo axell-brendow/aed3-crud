@@ -252,28 +252,27 @@ public class Arquivo<T extends Registro>
      */
     public boolean alterarIndex(int _id, long _newPos) throws Exception
     {
-        long fileSize = arquivoIndexId.length() / 12;
-        long blockSize = fileSize / 2;
-        long indexPos  = blockSize;
-        int idLido = -1;
+        if (_id < 1) return false;
 
-        while (blockSize != 0)
+        long startPos = 0;
+        long endPos   = arquivoIndexId.length() / 12;
+        long indexPos = 0;
+        int idLido    = -1;
+
+        while (_id           != idLido &&
+               startPos      <= endPos &&
+               indexPos * 12 <= arquivoIndexId.length() - 12)
         {
+            indexPos = startPos + ((endPos - startPos) / 2);
+
             arquivoIndexId.seek(indexPos * 12);
             idLido = arquivoIndexId.readInt();
 
-            blockSize /= 2;
-
-            if (idLido > _id)
-                indexPos -= blockSize;
-            else if (idLido < _id)
-                indexPos += blockSize;
-            else
-                break;
+            if      (_id < idLido) endPos   = indexPos - 1;
+            else if (idLido < _id) startPos = indexPos + 1;
         }
 
-        if (idLido != _id)
-            return false;
+        if (idLido != _id) return false;
 
         arquivoIndexId.writeLong(_newPos);
 
@@ -297,7 +296,7 @@ public class Arquivo<T extends Registro>
 
         while (_id           != idLido &&
                startPos      <= endPos &&
-               indexPos * 12 < arquivoIndexId.length() - 12)
+               indexPos * 12 <= arquivoIndexId.length() - 12)
         {
             indexPos = startPos + ((endPos - startPos) / 2);
 
@@ -308,8 +307,7 @@ public class Arquivo<T extends Registro>
             else if (idLido < _id) startPos = indexPos + 1;
         }
 
-        if (idLido != _id)
-            return -1;
+        if (idLido != _id) return -1;
 
         return arquivoIndexId.readLong();
     }
