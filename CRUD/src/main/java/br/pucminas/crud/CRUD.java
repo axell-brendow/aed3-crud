@@ -65,6 +65,8 @@ public class CRUD
                
             }
             while(opcao!=0);
+
+            arqLivros.fecha();
             
         }
         catch(Exception e)
@@ -285,6 +287,7 @@ public class CRUD
         arqLivros.incluir(new Livro("O Pequeno Príncipe","Antoine de Saint-Exupéry",(float)27.9));
         arqLivros.incluir(new Livro("Número Zero","Humberto Eco",(float)14.9));
         arqLivros.incluir(new Livro("A Garota no Trem","Paula Hawkins",(float)20.9));
+        /*
         arqLivros.incluir(new Livro("A Rainha Vermelha","Victoria Aveyard",(float)22.1));
         arqLivros.incluir(new Livro("O Sol É Para Todos","Harper Lee",(float)27));
         arqLivros.incluir(new Livro("1984","George Orwell",(float)32.8));
@@ -311,7 +314,8 @@ public class CRUD
         arqLivros.incluir(new Livro("Eu, Robô","Isaac Asimov",(float)20.15));
         arqLivros.incluir(new Livro("O Demonologista","Andrew Pyper",(float)32.47));
         arqLivros.incluir(new Livro("O Último Policial","Ben Winters",(float)27.6));
-        arqLivros.incluir(new Livro("A Febre","Megan Abbott",(float)27.9));   
+        arqLivros.incluir(new Livro("A Febre","Megan Abbott",(float)27.9));
+        */
     }
     
 }

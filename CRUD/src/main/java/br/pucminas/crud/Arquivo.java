@@ -408,4 +408,14 @@ public class Arquivo<T extends Registro>
 
         arquivo = new RandomAccessFile("dados/" + nomeArquivo, "rw");
     }
+
+    /**
+     * Fecha os arquivos abertos na instância
+     * @throws Exception
+     */
+    public void fecha() throws Exception
+    {
+        arquivo.close();
+        arquivoIndexId.close();
+    }
 }
