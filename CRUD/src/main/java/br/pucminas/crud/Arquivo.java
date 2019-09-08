@@ -196,38 +196,16 @@ public class Arquivo<T extends Registro>
      */
     public boolean excluir(int _id) throws Exception
     {
-        arquivo.seek(HEADER_SIZE);
+        long endereco = getPosicao(_id);
 
-        byte lapide;
-        byte[] byteArray;
-        int size;
-        T obj = null;
-        long endereco;
+        if (endereco < HEADER_SIZE)
+            return false;
 
-        while(arquivo.getFilePointer() < arquivo.length())
-        {
-            obj      = construtor.newInstance();
-            endereco = arquivo.getFilePointer();
-            lapide   = arquivo.readByte();
-            size     = arquivo.readInt();
+        arquivo.seek(endereco);
+        arquivo.writeByte('*');
+        alterarIndex(_id, -1);
 
-            byteArray = new byte[size];
-
-            arquivo.read(byteArray);
-            obj.fromByteArray(byteArray);
-
-            if(lapide == ' ' && obj.getID() == _id)
-            {
-                arquivo.seek(endereco);
-                arquivo.writeByte('*');
-
-                return true;
-            }
-
-            arquivo.skipBytes(arquivo.readInt()); // Pular o lixo
-        }
-
-        return false;
+        return true;
     }
 
     /**
