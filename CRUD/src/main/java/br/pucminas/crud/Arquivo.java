@@ -352,6 +352,10 @@ public class Arquivo<T extends Registro>
         return true;
     }
 
+    /**
+     * Remove registros desnecessários do arquivo
+     * @throws Exception
+     */
     public void cleanup() throws Exception
     {
         ArrayList<byte[]> list;
