@@ -5,27 +5,27 @@ import java.util.Scanner;
 public class CRUD
 {    
 	private static Scanner console = new Scanner(System.in);
-	private static Arquivo<Livro> arqLivros;
+	private static Arquivo<Filme> arqFilmes;
 	
 	public static void main(String[] args)
 	{    
 		try
 		{
-			arqLivros = new Arquivo<>(Livro.class.getConstructor(), "livros.db");
-			
+			arqFilmes = new Arquivo<>(Filme.class.getConstructor(), "filmes.db");
+		
 			// Menu
 			int opcao;
-		
+	
 			do
 			{
 				System.out.println("\n\n------------------------------------------------");
 				System.out.println("                    MENU");
 				System.out.println("------------------------------------------------");
-				System.out.println("1 - Listar livros");
-				System.out.println("2 - Buscar livro");
-				System.out.println("3 - Incluir livro");
-				System.out.println("4 - Excluir livro");
-				System.out.println("5 - Modificar livro");
+				System.out.println("1 - Listar filmes");
+				System.out.println("2 - Buscar filme");
+				System.out.println("3 - Incluir filme");
+				System.out.println("4 - Excluir filme");
+				System.out.println("5 - Modificar filme");
 				System.out.println("6 - Limpar arquivo");
 				System.out.println("9 - Povoar BD");
 				System.out.println("0 - Sair");
@@ -44,11 +44,11 @@ public class CRUD
 				{
 					switch(opcao)
 					{
-						case 1: listarLivro();   break;
-						case 2: buscarLivro();   break;
-						case 3: incluirLivro();  break;
-						case 4: excluirLivro();  break;
-						case 5: alterarLivro();  break;
+						case 1: listarFilmes();  break;
+						case 2: buscarFilme();   break;
+						case 3: incluirFilme();  break;
+						case 4: excluirFilme();  break;
+						case 5: alterarFilme();  break;
 						case 6: limparArquivo(); break;
 						case 9: povoar();        break;
 						case 0:                  break;
@@ -57,21 +57,18 @@ public class CRUD
 				} 
 				catch (Exception e)
 				{
-					System.out.println("Valor não reconhecido.");
+				   System.out.println("Valor não reconhecido.");
 				}
 
-				if (opcao != 0)
-					console.nextLine();
-			   
 			}
 			while(opcao!=0);
 
-			arqLivros.fecha();
-			
+			arqFilmes.fecha();
+
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+	   		e.printStackTrace();
 		}        
 	}    
 	
@@ -79,7 +76,7 @@ public class CRUD
 	{
 		try
 		{
-			arqLivros.cleanup();
+			arqFilmes.cleanup();
 		}
 		catch (Exception e)
 		{
@@ -88,48 +85,48 @@ public class CRUD
 	}
 
 	/**
-	 * Lista livros gravados no arquivo
+	 * Listar filmes gravados no arquivo
 	 * 
 	 * @throws Exception
 	 */
-	public static void listarLivro() throws Exception
+	public static void listarFilmes() throws Exception
 	{
-		Object[] livros = arqLivros.listar();
+		Object[] filmes = arqFilmes.listar();
 
-		for(int i = 0; i < livros.length; i++)
-			System.out.println((Livro)livros[i]);
+		for(int i = 0; i < filmes.length; i++)
+			System.out.println((Filme)filmes[i]);
 	}
-   
+
 	/**
-	 * Busca um livro presente no arquivo
+	 * Busca um filme presente no arquivo
 	 * @throws Exception
 	 */
-	public static void buscarLivro() throws Exception
+	public static void buscarFilme() throws Exception
 	{
 		System.out.println("\nBUSCA");
-		
+
 		int id;
 		System.out.print("ID: ");
 
 		id = Integer.valueOf(console.nextLine());
 		if(id <= 0) return;
 
-		Livro l = (Livro)arqLivros.buscar(id);
+		Filme buscado = (Filme)arqFilmes.buscar(id);
 
-		if(l != null)
-			System.out.println(l);
+		if(buscado != null)
+			System.out.println(buscado);
 		else
-			System.out.println("Livro não encontrado");
+			System.out.println("Filme não encontrado");
 	}
-	
+
 	/**
-	 * Cadastra um novo livro
+	 * Cadastra um novo filme
 	 * @throws Exception
 	 */
-	public static void incluirLivro() throws Exception
+	public static void incluirFilme() throws Exception
 	{
-		String titulo, autor;
-		float preco;
+		String titulo, categoria;
+		short ano;
 		char confirma;
 
 		System.out.println("\nINCLUSÃO");
@@ -137,17 +134,17 @@ public class CRUD
 		System.out.print("Título: ");
 		titulo = console.nextLine();
 
-		System.out.print("Autor: ");
-		autor = console.nextLine();
+		System.out.print("Categoria: ");
+		categoria = console.nextLine();
 
-		System.out.print("Preço: ");
+		System.out.print("Ano: ");
 		try
 		{
-			preco = Float.valueOf(console.nextLine());
+			ano = Short.valueOf(console.nextLine());
 		}
 		catch (Exception e)
 		{
-			preco = 0;
+			ano = 0;
 		}
 
 		System.out.print("\nConfirma inclusão? ");
@@ -162,17 +159,17 @@ public class CRUD
 
 		if(confirma == 's' || confirma == 'S')
 		{
-			Livro l = new Livro(titulo, autor, preco);
-			int id = arqLivros.incluir(l);
-			System.out.println("Livro incluído com ID: " + id);
+			Filme a_ser_incluido = new Filme(titulo, categoria, ano);
+			int id = arqFilmes.incluir(a_ser_incluido);
+			System.out.println("Filme incluído com ID: " + id);
 		}
 	}
-   
+
 	/**
-	 * Exclui um livro
+	 * Exclui um filme do arquivo
 	 * @throws Exception
 	 */
-	public static void excluirLivro() throws Exception
+	public static void excluirFilme() throws Exception
 	{
 		int id;
 		char confirma;
@@ -184,11 +181,11 @@ public class CRUD
 
 		if (id <= 0) return;
 
-		Livro l = (Livro)arqLivros.buscar(id);
+		Filme aSerExcluido = (Filme)arqFilmes.buscar(id);
 
-		if (l != null)
+		if (aSerExcluido != null)
 		{
-			System.out.println(l);
+			System.out.println(aSerExcluido);
 			System.out.print("\nConfirma exclusão? ");
 			try
 			{
@@ -198,23 +195,23 @@ public class CRUD
 			{
 				confirma = 'n';
 			} 
-
+				
 			if(confirma=='s' || confirma=='S')
-				if(arqLivros.excluir(id))
-					System.out.println("Livro excluído.");
+				if(arqFilmes.excluir(id))
+					System.out.println("Filme excluído.");
 		}
 		else
-			System.out.println("Livro não encontrado");
+			System.out.println("Filme não encontrado");
 	}
 
 	/**
-	 * Altera um livro
+	 * Altera um filme no arquivo
 	 * @throws Exception
 	 */
-	public static void alterarLivro() throws Exception
+	public static void alterarFilme() throws Exception
 	{
 		System.out.println("\nALTERAÇÃO");
-		
+
 		int id;
 		char confirma;
 
@@ -223,39 +220,41 @@ public class CRUD
 		id = Integer.valueOf(console.nextLine());
 		if (id <= 0) return;
 
-		Livro l = (Livro)arqLivros.buscar(id);
+		Filme aSerAlterado = (Filme)arqFilmes.buscar(id);
 
-		if(l != null)
-			System.out.println(l);
+		if(aSerAlterado != null)
+			System.out.println(aSerAlterado);
 		else
 		{
-			System.out.println("Livro não encontrado");
+			System.out.println("Filme não encontrado");
 			return;
 		}
 
 		System.out.println();
 
-		String titulo, autor;
-		float preco;
-	
+		String titulo, categoria;
+		short ano;
+
 		System.out.print("Novo título: ");
 		titulo = console.nextLine();
-		if (titulo.isBlank()) titulo = l.getTitulo();
-	
-		System.out.print("Novo autor: ");
-		autor = console.nextLine();
-		if (autor.isBlank()) autor = l.getAutor();
-	
-		System.out.print("Novo preço: ");
+		if (titulo.equals(" "))
+			titulo = aSerAlterado.getTitulo();
+
+		System.out.print("Nova categoria: ");
+		categoria = console.nextLine();
+		if (categoria.equals(" "))
+			categoria = aSerAlterado.getCategoria();
+
+		System.out.print("Novo Ano: ");
 		try
 		{
-			preco = Float.valueOf(console.nextLine());
+			ano = Short.valueOf(console.nextLine());
 		}
 		catch (Exception e)
 		{
-			preco = l.getPreco();
+			ano = aSerAlterado.getAno();
 		}
-		
+
 		System.out.print("\nConfirma alteração? ");
 		try
 		{
@@ -265,57 +264,25 @@ public class CRUD
 		{
 			confirma = 'n';
 		}        
-	
+
 		if(confirma == 's' || confirma == 'S')
 		{
-			l = new Livro(titulo, autor, preco);
-			l.setID(id);
+			aSerAlterado = new Filme(titulo, categoria, ano);
+			aSerAlterado.setID(id);
 
-			if (arqLivros.alterar(l))
-				System.out.println("Livro alterado com sucesso.");
+			if (arqFilmes.alterar(aSerAlterado))
+				System.out.println("Filme alterado com sucesso.");
 			else
-				System.out.println("Erro ao alterar livro.");
+				System.out.println("Erro ao alterar filme.");
 		}
 	}
-   
+
 	/**
-	 * Gera uma lista de livros
+	 * Gerar uma lista de filmes
 	 * @throws Exception
 	 */
 	public static void povoar() throws Exception
 	{
-		arqLivros.incluir(new Livro("O Pequeno Príncipe","Antoine de Saint-Exupéry",(float)27.9));
-		arqLivros.incluir(new Livro("Número Zero","Humberto Eco",(float)14.9));
-		arqLivros.incluir(new Livro("A Garota no Trem","Paula Hawkins",(float)20.9));
-		/*
-		arqLivros.incluir(new Livro("A Rainha Vermelha","Victoria Aveyard",(float)22.1));
-		arqLivros.incluir(new Livro("O Sol É Para Todos","Harper Lee",(float)27));
-		arqLivros.incluir(new Livro("1984","George Orwell",(float)32.8));
-		arqLivros.incluir(new Livro("A Odisséia","Homero",(float)35.9));
-		arqLivros.incluir(new Livro("Sherlock Holmes","Arthur Conan Doyle",(float)24));
-		arqLivros.incluir(new Livro("Joyland","Stephen King",(float)17.9));
-		arqLivros.incluir(new Livro("Objetos Cortantes","Gillian Flynn",(float)16.9));
-		arqLivros.incluir(new Livro("A Lista Negra","Jennifer Brown",(float)16.9));
-		arqLivros.incluir(new Livro("Garota Exemplar","Gillian Flynn",(float)14.9));
-		arqLivros.incluir(new Livro("O Iluminado","Stephen King",(float)14.9));
-		arqLivros.incluir(new Livro("Queda de Gigantes","Ken Follett",(float)23.67));
-		arqLivros.incluir(new Livro("Eternidade Por Um Fio","Ken Follett",(float)30.1));
-		arqLivros.incluir(new Livro("Inverno do Mundo","Ken Follett",(float)29.99));
-		arqLivros.incluir(new Livro("A Guerra dos Tronos","George R. R. Martin",(float)22.76));
-		arqLivros.incluir(new Livro("A Revolução dos Bichos","George Orwell",(float)27.36));
-		arqLivros.incluir(new Livro("O Mundo de Sofia","Jostein Gaarder",(float)28.2));
-		arqLivros.incluir(new Livro("O Velho e o Mar","Ernest Hemingway",(float)16.9));
-		arqLivros.incluir(new Livro("Escuridão Total Sem Estrelas","Stephen King",(float)28.4));
-		arqLivros.incluir(new Livro("O Pintassilgo","Donna Tartt",(float)21.63));
-		arqLivros.incluir(new Livro("Se Eu Ficar","Gayle Forman",(float)13.54));
-		arqLivros.incluir(new Livro("Toda Luz Que Não Podemos Ver","Anthony Doerr",(float)24.38));
-		arqLivros.incluir(new Livro("Eu, Você e a Garota Que Vai Morrer","Jesse Andrews",(float)14.9));
-		arqLivros.incluir(new Livro("Na Natureza Selvagem","Jon Krakauer",(float)14.9));
-		arqLivros.incluir(new Livro("Eu, Robô","Isaac Asimov",(float)20.15));
-		arqLivros.incluir(new Livro("O Demonologista","Andrew Pyper",(float)32.47));
-		arqLivros.incluir(new Livro("O Último Policial","Ben Winters",(float)27.6));
-		arqLivros.incluir(new Livro("A Febre","Megan Abbott",(float)27.9));
-		*/
-	}
-	
+		//arqFilmes.incluir(new Filme("The Godfather","Crime",(short)1972));
+	}	
 }
