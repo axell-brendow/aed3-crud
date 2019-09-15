@@ -95,6 +95,10 @@ public class CRUD
 
 		for(int i = 0; i < filmes.length; i++)
 			System.out.println((Filme)filmes[i]);
+
+		
+		System.out.print("Pressione ENTER");
+		console.nextLine();
 	}
 
 	/**
@@ -117,6 +121,9 @@ public class CRUD
 			System.out.println(buscado);
 		else
 			System.out.println("Filme não encontrado");
+
+		System.out.print("Pressione ENTER");
+		console.nextLine();
 	}
 
 	/**
@@ -159,10 +166,15 @@ public class CRUD
 
 		if(confirma == 's' || confirma == 'S')
 		{
-			Filme a_ser_incluido = new Filme(titulo, categoria, ano);
-			int id = arqFilmes.incluir(a_ser_incluido);
+			Filme aSerIncluido = new Filme(titulo, categoria, ano);
+			int id = arqFilmes.incluir(aSerIncluido);
 			System.out.println("Filme incluído com ID: " + id);
 		}
+		else
+			System.out.println("Filme não incluído.");
+
+		System.out.print("Pressione ENTER");
+		console.nextLine();
 	}
 
 	/**
@@ -199,9 +211,14 @@ public class CRUD
 			if(confirma=='s' || confirma=='S')
 				if(arqFilmes.excluir(id))
 					System.out.println("Filme excluído.");
+				else
+					System.out.println("Exclusão cancelada.");
 		}
 		else
 			System.out.println("Filme não encontrado");
+
+		System.out.print("Pressione ENTER");
+		console.nextLine();
 	}
 
 	/**
@@ -275,6 +292,11 @@ public class CRUD
 			else
 				System.out.println("Erro ao alterar filme.");
 		}
+		else
+			System.out.println("Alteração cancelada.");
+
+		System.out.print("Pressione ENTER");
+		console.nextLine();
 	}
 
 	/**
