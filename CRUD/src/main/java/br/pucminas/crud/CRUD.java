@@ -1,10 +1,12 @@
 package br.pucminas.crud;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class CRUD
 {    
-	private static Scanner console = new Scanner(System.in);
+	private static BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
 	private static Arquivo<Filme> arqFilmes;
 	
 	public static void main(String[] args)
@@ -15,7 +17,7 @@ public class CRUD
 		
 			// Menu
 			int opcao;
-	
+			
 			do
 			{
 				System.out.println("\n\n------------------------------------------------");
@@ -33,7 +35,7 @@ public class CRUD
 
 				try
 				{
-					opcao = Integer.valueOf(console.nextLine());
+					opcao = Integer.valueOf(console.readLine());
 				}
 				catch(NumberFormatException e)
 				{
@@ -98,7 +100,7 @@ public class CRUD
 
 		
 		System.out.print("Pressione ENTER");
-		console.nextLine();
+		console.readLine();
 	}
 
 	/**
@@ -112,7 +114,7 @@ public class CRUD
 		int id;
 		System.out.print("ID: ");
 
-		id = Integer.valueOf(console.nextLine());
+		id = Integer.valueOf(console.readLine());
 		if(id <= 0) return;
 
 		Filme buscado = (Filme)arqFilmes.buscar(id);
@@ -123,7 +125,7 @@ public class CRUD
 			System.out.println("Filme não encontrado");
 
 		System.out.print("Pressione ENTER");
-		console.nextLine();
+		console.readLine();
 	}
 
 	/**
@@ -132,22 +134,23 @@ public class CRUD
 	 */
 	public static void incluirFilme() throws Exception
 	{
-		String titulo, categoria;
+		String titulo;
+		int idCategoria;
 		short ano;
 		char confirma;
 
 		System.out.println("\nINCLUSÃO");
 
 		System.out.print("Título: ");
-		titulo = console.nextLine();
+		titulo = console.readLine();
 
 		System.out.print("Categoria: ");
-		categoria = console.nextLine();
+		idCategoria = Integer.valueOf(console.readLine());
 
 		System.out.print("Ano: ");
 		try
 		{
-			ano = Short.valueOf(console.nextLine());
+			ano = Short.valueOf(console.readLine());
 		}
 		catch (Exception e)
 		{
@@ -157,7 +160,7 @@ public class CRUD
 		System.out.print("\nConfirma inclusão? ");
 		try
 		{
-			confirma = console.nextLine().charAt(0);
+			confirma = console.readLine().charAt(0);
 		}
 		catch (Exception e)
 		{
@@ -166,7 +169,7 @@ public class CRUD
 
 		if(confirma == 's' || confirma == 'S')
 		{
-			Filme aSerIncluido = new Filme(titulo, categoria, ano);
+			Filme aSerIncluido = new Filme(titulo, idCategoria, ano);
 			int id = arqFilmes.incluir(aSerIncluido);
 			System.out.println("Filme incluído com ID: " + id);
 		}
@@ -174,7 +177,7 @@ public class CRUD
 			System.out.println("Filme não incluído.");
 
 		System.out.print("Pressione ENTER");
-		console.nextLine();
+		console.readLine();
 	}
 
 	/**
@@ -189,7 +192,7 @@ public class CRUD
 		System.out.println("\nEXCLUSÃO");
 
 		System.out.print("ID: ");
-		id = Integer.valueOf(console.nextLine());
+		id = Integer.valueOf(console.readLine());
 
 		if (id <= 0) return;
 
@@ -201,7 +204,7 @@ public class CRUD
 			System.out.print("\nConfirma exclusão? ");
 			try
 			{
-				confirma = console.nextLine().charAt(0);
+				confirma = console.readLine().charAt(0);
 			}
 			catch (Exception e)
 			{
@@ -218,7 +221,7 @@ public class CRUD
 			System.out.println("Filme não encontrado");
 
 		System.out.print("Pressione ENTER");
-		console.nextLine();
+		console.readLine();
 	}
 
 	/**
@@ -234,7 +237,7 @@ public class CRUD
 
 		System.out.print("ID: ");
 
-		id = Integer.valueOf(console.nextLine());
+		id = Integer.valueOf(console.readLine());
 		if (id <= 0) return;
 
 		Filme aSerAlterado = (Filme)arqFilmes.buscar(id);
@@ -249,23 +252,24 @@ public class CRUD
 
 		System.out.println();
 
-		String titulo, categoria;
+		String titulo;
+		int idCategoria;
 		short ano;
 
 		System.out.print("Novo título: ");
-		titulo = console.nextLine();
+		titulo = console.readLine();
 		if (titulo.equals(" "))
 			titulo = aSerAlterado.getTitulo();
 
 		System.out.print("Nova categoria: ");
-		categoria = console.nextLine();
-		if (categoria.equals(" "))
-			categoria = aSerAlterado.getCategoria();
+		idCategoria = Integer.valueOf(console.readLine());
+		if (idCategoria != 0)
+			idCategoria = aSerAlterado.getCategoria();
 
 		System.out.print("Novo Ano: ");
 		try
 		{
-			ano = Short.valueOf(console.nextLine());
+			ano = Short.valueOf(console.readLine());
 		}
 		catch (Exception e)
 		{
@@ -275,7 +279,7 @@ public class CRUD
 		System.out.print("\nConfirma alteração? ");
 		try
 		{
-			confirma = console.nextLine().charAt(0);
+			confirma = console.readLine().charAt(0);
 		}
 		catch (Exception e)
 		{
@@ -284,7 +288,7 @@ public class CRUD
 
 		if(confirma == 's' || confirma == 'S')
 		{
-			aSerAlterado = new Filme(titulo, categoria, ano);
+			aSerAlterado = new Filme(titulo, idCategoria, ano);
 			aSerAlterado.setID(id);
 
 			if (arqFilmes.alterar(aSerAlterado))
@@ -296,7 +300,7 @@ public class CRUD
 			System.out.println("Alteração cancelada.");
 
 		System.out.print("Pressione ENTER");
-		console.nextLine();
+		console.readLine();
 	}
 
 	/**

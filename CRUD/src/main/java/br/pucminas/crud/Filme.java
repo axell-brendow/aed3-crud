@@ -5,8 +5,8 @@ import java.io.*;
 public class Filme implements Registro
 {
     private int id;
+    private int categoria;
     private String titulo;
-    private String categoria;
     private short ano;
     private final String TABLE_NAME = "filme";
 
@@ -14,11 +14,11 @@ public class Filme implements Registro
     {
         this.id = 0;
         this.titulo = "";
-        this.categoria = "";
+        this.categoria = 0;
         this.ano = 0;
 	}
 	
-    public Filme(String _titulo, String _categoria, short _ano)
+    public Filme(String _titulo, int _categoria, short _ano)
     {
         this.titulo = _titulo;
         this.categoria = _categoria;
@@ -38,7 +38,7 @@ public class Filme implements Registro
 		return this.titulo;
 	}
 
-	public String getCategoria()
+	public int getCategoria()
 	{
         return this.categoria;
     }
@@ -72,7 +72,7 @@ public class Filme implements Registro
 		this.titulo = _titulo;
 	}
 
-	public void setCategoria(String _categoria)
+	public void setCategoria(int _categoria)
 	{
         this.categoria = _categoria;
     }
@@ -104,7 +104,7 @@ public class Filme implements Registro
 
 		dos.writeInt(id);
 		dos.writeUTF(titulo);
-		dos.writeUTF(categoria);
+		dos.writeInt(categoria);
 		dos.writeShort(ano);  
 
 		return baos.toByteArray();
@@ -122,7 +122,7 @@ public class Filme implements Registro
 		
 		this.id = dis.readInt();
 		this.titulo = dis.readUTF();
-		this.categoria = dis.readUTF();
+		this.categoria = dis.readInt();
 		this.ano = dis.readShort();
 	}
 	
