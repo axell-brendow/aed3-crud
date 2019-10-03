@@ -3,7 +3,6 @@ package br.pucminas.crud;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import jdk.jshell.spi.ExecutionControl.ExecutionControlException;
 
 public class CRUD
 {    
@@ -31,7 +30,7 @@ public class CRUD
 				System.out.println("13 - Incluir filme		23 - Incluir Categoria");
 				System.out.println("14 - Excluir filme		24 - Excluir Categoria");
 				System.out.println("15 - Modificar filme	25 - Modificar Categoria");
-				System.out.println("16 - Limpar arquivo		26 - Limpar Categorias");
+				System.out.println("16 - Limpar arquivo");
 				System.out.println("9 - Povoar BD");
 				System.out.println("0 - Sair");
 				System.out.print("\nOpção: ");
@@ -55,12 +54,11 @@ public class CRUD
 						case 14: excluirFilme();  		break;
 						case 15: alterarFilme();  		break;
 						case 16: limparArquivo();		break;
-//						case 21: listarFilmes(); 		break;
-//						case 22: buscarFilme();   		break;
+						case 21: listarCatetegorias();	break;
+						case 22: buscarCategoria();		break;
 						case 23: incluirCategoria();  	break;
-//						case 24: excluirFilme();  		break;
-//						case 25: alterarFilme();  		break;
-//						case 26: limparArquivo(); 		break;
+						case 24: excluirCategoria();	break;
+						case 25: alterarCategoria();	break;
 						case 9: povoar();        		break;
 						case 0:                  		break;
 						default: System.out.println("Opção inválida");
@@ -95,6 +93,8 @@ public class CRUD
 		}
 	}
 
+	//------------------METODOS COM FILME
+	
 	/**
 	 * Listar filmes gravados no arquivo
 	 * 
@@ -143,7 +143,6 @@ public class CRUD
 	 */
 	public static void incluirFilme() throws Exception
 	{
-		//FIXME: concertar erro ao inserir filme (retorna valor nao conhecido)
 		String titulo;
 		int idCategoria;
 		short ano;
@@ -322,18 +321,65 @@ public class CRUD
 		console.readLine();
 	}
 
+	//------------------METODOS COM CATEGORIA
 	
+	/**
+	 * Listar Categorias gravados no arquivo
+	 * @throws Exception
+	 */
+	public static void listarCatetegorias() throws Exception
+	{
+		Object[] categorias =  arqCategoria.listar();
+		
+		for (int i = 0; i < categorias.length; i++) {
+			
+			System.out.println(categorias[i]);
+		}
+		
+		System.out.print("Pressione ENTER");
+		console.readLine();
+	}
+
+	/**
+	 * Busca uma Categoria presente no arquivo
+	 * @throws Exception
+	 */
+	public static void buscarCategoria() throws Exception
+	{
+		//FIXME: concertar erro ao inserir filme (retorna valor nao conhecido)
+		System.out.println("\nBUSCA");
+
+		int id;
+		System.out.print("ID: ");
+
+		id = Integer.valueOf(console.readLine());
+		if(id <= 0) return;
+
+		Categoria buscado = (Categoria)arqFilmes.buscar(id);
+
+		if(buscado != null)
+			System.out.println(buscado);
+		else
+			System.out.println("Categoria não encontrada");
+
+		System.out.print("Pressione ENTER");
+		console.readLine();
+	}
+
+	/**
+	 *  Cadastra uma nova Categoria
+	 * @throws Exception
+	 */
 	public static void incluirCategoria() throws Exception
 	{
-		String nome;
-		int idCategoria;
+		String nome = "";
 		char confirma;
 		
 		System.out.println("\nINCLUSÃO CATEGORIA");
 		
 		try
 		{
-			
+			System.out.print("Nome: ");
 			nome = console.readLine();
 			
 		} catch (Exception e) {
@@ -341,6 +387,137 @@ public class CRUD
 			e.printStackTrace();
 		}
 		
+		System.out.print("\nConfirma inclusão? ");
+		
+		try
+		{
+			confirma = console.readLine().charAt(0);
+		}
+		catch (Exception e)
+		{
+			confirma = 'n';
+		} 
+
+		if(confirma == 's' || confirma == 'S')
+		{
+			Categoria aSerIncluido = new Categoria(nome);
+			int id = arqCategoria.incluir(aSerIncluido);
+			System.out.println("Categoria incluído com ID: " + id);
+		}
+		else
+		{
+			System.out.println("Filme não incluído.");
+		}
+
+		System.out.print("Pressione ENTER");
+		console.readLine();
+		
+	}
+
+	/**
+	 * Exclui uma categoria do arquivo
+	 * @throws Exception
+	 */
+	public static void excluirCategoria() throws Exception
+	{
+		int id;
+		char confirma;
+
+		System.out.println("\nEXCLUSÃO");
+
+		System.out.print("ID: ");
+		id = Integer.valueOf(console.readLine());
+
+		if (id <= 0) return;
+
+		Categoria aSerExcluido = (Categoria)arqCategoria.buscar(id);
+
+		if (aSerExcluido != null)
+		{
+			System.out.println(aSerExcluido);
+			System.out.print("\nConfirma exclusão? ");
+			try
+			{
+				confirma = console.readLine().charAt(0);
+			}
+			catch (Exception e)
+			{
+				confirma = 'n';
+			} 
+				
+			if(confirma=='s' || confirma=='S')
+				if(arqCategoria.excluir(id))
+					System.out.println("Categoria excluído.");
+				else
+					System.out.println("Exclusão cancelada.");
+		}
+		else
+			System.out.println("Categoria não encontrado");
+
+		System.out.print("Pressione ENTER");
+		console.readLine();
+	}
+	
+	/**
+	 * Altera uma categoria no arquivo
+	 * @throws Exception
+	 */
+	public static void alterarCategoria() throws Exception
+	{
+		System.out.println("\nALTERAÇÃO");
+
+		int id;
+		char confirma;
+
+		System.out.print("ID: ");
+
+		id = Integer.valueOf(console.readLine());
+		if (id <= 0) return;
+
+		Categoria aSerAlterado = (Categoria)arqCategoria.buscar(id);
+
+		if(aSerAlterado != null)
+			System.out.println(aSerAlterado);
+		else
+		{
+			System.out.println("Categoria não encontrado");
+			return;
+		}
+
+		System.out.println();
+
+		String nome;
+
+		System.out.print("Novo Nome: ");
+		nome = console.readLine();
+		if (nome.equals(" "))
+			nome = aSerAlterado.getNome();
+
+		System.out.print("\nConfirma alteração? ");
+		try
+		{
+			confirma = console.readLine().charAt(0);
+		}
+		catch (Exception e)
+		{
+			confirma = 'n';
+		}        
+
+		if(confirma == 's' || confirma == 'S')
+		{
+			aSerAlterado = new Categoria(nome);
+			aSerAlterado.setID(id);
+
+			if (arqCategoria.alterar(aSerAlterado))
+				System.out.println("Categoria alterado com sucesso.");
+			else
+				System.out.println("Erro ao alterar Categoria.");
+		}
+		else
+			System.out.println("Alteração cancelada.");
+
+		System.out.print("Pressione ENTER");
+		console.readLine();
 	}
 	
 	/**
