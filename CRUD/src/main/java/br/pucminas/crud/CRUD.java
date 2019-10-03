@@ -2,18 +2,21 @@ package br.pucminas.crud;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Scanner;
+
+import jdk.jshell.spi.ExecutionControl.ExecutionControlException;
 
 public class CRUD
 {    
 	private static BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
 	private static Arquivo<Filme> arqFilmes;
+	private static Arquivo<Categoria> arqCategoria;
 	
 	public static void main(String[] args)
 	{    
 		try
 		{
-			arqFilmes = new Arquivo<>(Filme.class.getConstructor(), "filmes.db");
+			arqFilmes	 = new Arquivo<>(Filme.class.getConstructor(), "filmes.db");
+			arqCategoria = new Arquivo<>(Categoria.class.getConstructor(), "Categoria.db");
 		
 			// Menu
 			int opcao;
@@ -23,12 +26,12 @@ public class CRUD
 				System.out.println("\n\n------------------------------------------------");
 				System.out.println("                    MENU");
 				System.out.println("------------------------------------------------");
-				System.out.println("1 - Listar filmes");
-				System.out.println("2 - Buscar filme");
-				System.out.println("3 - Incluir filme");
-				System.out.println("4 - Excluir filme");
-				System.out.println("5 - Modificar filme");
-				System.out.println("6 - Limpar arquivo");
+				System.out.println("11 - Listar filmes		21 - Listar Categorias");
+				System.out.println("12 - Buscar filme		22 - Buscar Categoria");
+				System.out.println("13 - Incluir filme		23 - Incluir Categoria");
+				System.out.println("14 - Excluir filme		24 - Excluir Categoria");
+				System.out.println("15 - Modificar filme	25 - Modificar Categoria");
+				System.out.println("16 - Limpar arquivo		26 - Limpar Categorias");
 				System.out.println("9 - Povoar BD");
 				System.out.println("0 - Sair");
 				System.out.print("\nOpção: ");
@@ -46,14 +49,20 @@ public class CRUD
 				{
 					switch(opcao)
 					{
-						case 1: listarFilmes();  break;
-						case 2: buscarFilme();   break;
-						case 3: incluirFilme();  break;
-						case 4: excluirFilme();  break;
-						case 5: alterarFilme();  break;
-						case 6: limparArquivo(); break;
-						case 9: povoar();        break;
-						case 0:                  break;
+						case 11: listarFilmes();  		break;
+						case 12: buscarFilme();   		break;
+						case 13: incluirFilme();  		break;
+						case 14: excluirFilme();  		break;
+						case 15: alterarFilme();  		break;
+						case 16: limparArquivo();		break;
+//						case 21: listarFilmes(); 		break;
+//						case 22: buscarFilme();   		break;
+						case 23: incluirCategoria();  	break;
+//						case 24: excluirFilme();  		break;
+//						case 25: alterarFilme();  		break;
+//						case 26: limparArquivo(); 		break;
+						case 9: povoar();        		break;
+						case 0:                  		break;
 						default: System.out.println("Opção inválida");
 					}
 				} 
@@ -134,6 +143,7 @@ public class CRUD
 	 */
 	public static void incluirFilme() throws Exception
 	{
+		//FIXME: concertar erro ao inserir filme (retorna valor nao conhecido)
 		String titulo;
 		int idCategoria;
 		short ano;
@@ -146,6 +156,15 @@ public class CRUD
 
 		System.out.print("Categoria: ");
 		idCategoria = Integer.valueOf(console.readLine());
+		
+		//Verificar se existe a categoria
+		if (arqCategoria.buscar(idCategoria) == null)
+		{
+			System.out.println("O id da Categoria não existe");
+			
+			//XXX:Serial legal adicionar uma opcao para perguntar se quer adicionar a categoria?
+			return;
+		}
 
 		System.out.print("Ano: ");
 		try
@@ -303,6 +322,27 @@ public class CRUD
 		console.readLine();
 	}
 
+	
+	public static void incluirCategoria() throws Exception
+	{
+		String nome;
+		int idCategoria;
+		char confirma;
+		
+		System.out.println("\nINCLUSÃO CATEGORIA");
+		
+		try
+		{
+			
+			nome = console.readLine();
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+	}
+	
 	/**
 	 * Gerar uma lista de filmes
 	 * @throws Exception

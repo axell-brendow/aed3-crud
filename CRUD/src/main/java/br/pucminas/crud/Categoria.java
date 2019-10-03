@@ -11,11 +11,13 @@ public class Categoria implements Registro {
     private int id;
     private String nome;
     
-    public Categoria() {
+    public Categoria() 
+    {
     	this(0, null);
 	}
     
-    public Categoria(String _nome) {
+    public Categoria(String _nome)
+    {
     	this(0, _nome);
 	}
     
@@ -23,30 +25,35 @@ public class Categoria implements Registro {
     	this(_id, "");
 	}
     
-	public Categoria(int _id, String _nome) {
+	public Categoria(int _id, String _nome)
+	{
 		id = _id;
 		nome = _nome;
 	}
 
 	@Override
-	public int getID() {
+	public int getID()
+	{
 		return id;
 	}
 	
 	@Override
-	public void setID(int _id) {
+	public void setID(int _id)
+	{
 		
 		id = _id;
 	}
 	
 	@Override
-	public String getTableName() {
+	public String getTableName()
+	{
 		
 		return getClass().getName();
 	}
 	
 	@Override
-	public byte[] toByteArray() throws IOException {
+	public byte[] toByteArray() throws IOException
+	{
 		
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		DataOutputStream dataOut = new DataOutputStream(output);
@@ -57,7 +64,8 @@ public class Categoria implements Registro {
 		return output.toByteArray();
 	}
 	@Override
-	public void fromByteArray(byte[] _byteData) throws IOException {
+	public void fromByteArray(byte[] _byteData) throws IOException
+	{
 
 		ByteArrayInputStream input = new ByteArrayInputStream(_byteData);
 		DataInputStream dataInput = new DataInputStream(input);
@@ -68,7 +76,8 @@ public class Categoria implements Registro {
 	}
 	
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		
 		return "\nID....:    " + this.id + 
 			   "\nNome..:    " + this.nome;
