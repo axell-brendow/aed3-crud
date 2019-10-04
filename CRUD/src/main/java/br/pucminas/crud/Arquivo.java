@@ -163,6 +163,7 @@ public class Arquivo<T extends Registro>
 		T obj = null;
 
 		long pos = getPosicao(_id);
+		
 
 		if (pos > 0)
 		{

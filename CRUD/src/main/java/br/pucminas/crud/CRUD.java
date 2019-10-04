@@ -1,7 +1,10 @@
 package br.pucminas.crud;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+
+import jdk.jshell.spi.ExecutionControl.ExecutionControlException;
 
 
 public class CRUD
@@ -17,60 +20,7 @@ public class CRUD
 			arqFilmes	 = new Arquivo<>(Filme.class.getConstructor(), "filmes.db");
 			arqCategoria = new Arquivo<>(Categoria.class.getConstructor(), "Categoria.db");
 		
-			// Menu
-			int opcao;
-			
-			do
-			{
-				System.out.println("\n\n------------------------------------------------");
-				System.out.println("                    MENU");
-				System.out.println("------------------------------------------------");
-				System.out.println("11 - Listar filmes		21 - Listar Categorias");
-				System.out.println("12 - Buscar filme		22 - Buscar Categoria");
-				System.out.println("13 - Incluir filme		23 - Incluir Categoria");
-				System.out.println("14 - Excluir filme		24 - Excluir Categoria");
-				System.out.println("15 - Modificar filme	25 - Modificar Categoria");
-				System.out.println("16 - Limpar arquivo");
-				System.out.println("9 - Povoar BD");
-				System.out.println("0 - Sair");
-				System.out.print("\nOpção: ");
-
-				try
-				{
-					opcao = Integer.valueOf(console.readLine());
-				}
-				catch(NumberFormatException e)
-				{
-					opcao = -1;
-				}
-
-				try
-				{
-					switch(opcao)
-					{
-						case 11: listarFilmes();  		break;
-						case 12: buscarFilme();   		break;
-						case 13: incluirFilme();  		break;
-						case 14: excluirFilme();  		break;
-						case 15: alterarFilme();  		break;
-						case 16: limparArquivo();		break;
-						case 21: listarCatetegorias();	break;
-						case 22: buscarCategoria();		break;
-						case 23: incluirCategoria();  	break;
-						case 24: excluirCategoria();	break;
-						case 25: alterarCategoria();	break;
-						case 9: povoar();        		break;
-						case 0:                  		break;
-						default: System.out.println("Opção inválida");
-					}
-				} 
-				catch (Exception e)
-				{
-				   System.out.println("Valor não reconhecido.");
-				}
-
-			}
-			while(opcao!=0);
+			escolherMenus();
 
 			arqFilmes.fecha();
 
@@ -91,6 +41,156 @@ public class CRUD
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	//------------------METODOS PARA PRINTAR O MENU
+	
+	/**
+	 * Metodo para escolher sub menus principal
+	 * @throws Exception
+	 */
+	public static void escolherMenus() throws Exception
+	{
+		
+		int opcao = 0;
+		
+		do
+		{
+			printarMenuPrincial();
+			
+			try
+			{
+				opcao = Integer.valueOf(console.readLine());
+			}
+			catch(NumberFormatException | IOException a)
+			{
+				opcao = -1;
+				System.out.println("Metodo: menu principal");
+				a.printStackTrace();
+			}
+			
+			switch(opcao)
+			{
+			case 1:	printarMenuFilmes();						break;
+			case 2:	printarMenuCategorias();					break;
+			case 3:	povoar();									break;
+			case 4: limparArquivo();							break;
+			case 0:  											break;
+			default: System.out.println("Menu não encontrado");	break;		
+			}
+		} while (opcao != 0);
+	}
+	
+	/**
+	 * metodo para apenas printar o menu princial
+	 */
+	public static void printarMenuPrincial()
+	{
+		System.out.println("\n\n------------------------------------------------");
+		System.out.println("                    MENU PRINCIPAL");
+		System.out.println("------------------------------------------------");
+		System.out.println("1 - Filmes");
+		System.out.println("2 - Categorias");
+		System.out.println("3 - Povoar Banco de Dados");
+		System.out.println("4 - Limpar Banco de Dados");
+		System.out.println("0 - Sair");
+		System.out.print("\nOpção: ");
+	}
+	
+	/**
+	 * Metodo para printar o menu dos filmes com suas opecaoes
+	 * @throws Exception
+	 */
+	public static void printarMenuFilmes() throws Exception
+	{
+		
+		int opcaoFilme = 0;
+		
+		do
+		{
+			
+			System.out.println("\n\n------------------------------------------------");
+			System.out.println("                    MENU FILMES");
+			System.out.println("------------------------------------------------");
+			System.out.println("1 - Listar 	filmes");
+			System.out.println("2 - Buscar 	filme");
+			System.out.println("3 - Incluir filme");
+			System.out.println("4 - Excluir filme");
+			System.out.println("5 - Modificar filme");
+			System.out.println("0 - voltar para o menu principal");
+			System.out.print("\nOpção: ");
+			
+			try
+			{
+				opcaoFilme = Integer.valueOf(console.readLine());
+			}
+			catch(NumberFormatException | IOException a)
+			{
+				opcaoFilme = -1;
+				System.out.println("Metodo: menu filmes");
+				a.printStackTrace();
+			}
+			
+			switch(opcaoFilme)
+			{
+				case 1:	listarFilmes();		break;
+				case 2:	buscarFilme();		break;
+				case 3:	incluirFilme();		break;
+				case 4:	excluirFilme();		break;
+				case 5:	alterarFilme();		break;
+				case 0:						break;
+				default:					break;
+			}
+			
+		}  while (opcaoFilme != 0);
+		
+	}
+	
+	/**
+	 * Metodo para printar o menu das categorias com suas operacaoes
+	 * @throws Exception
+	 */
+	public static void printarMenuCategorias () throws Exception
+	{
+		int opcaoCategoria = 0;
+		
+		do
+		{
+			
+			System.out.println("\n\n------------------------------------------------");
+			System.out.println("                    MENU CATEGORIAS");
+			System.out.println("------------------------------------------------");
+			System.out.println("1 - Listar 	Categorias");
+			System.out.println("2 - Buscar 	Categoria");
+			System.out.println("3 - Incluir Categoria");
+			System.out.println("4 - Excluir Categoria");
+			System.out.println("5 - Modificar Categoria");
+			System.out.println("0 - voltar para o menu principal");
+			System.out.print("\nOpção: ");
+			
+			try
+			{
+				opcaoCategoria = Integer.valueOf(console.readLine());
+			}
+			catch(NumberFormatException | IOException a)
+			{
+				opcaoCategoria = -1;
+				System.out.println("Metodo: menu filmes");
+				a.printStackTrace();
+			}
+			
+			switch(opcaoCategoria)
+			{
+				case 1:	listarCatetegorias();	break;
+				case 2:	buscarCategoria();		break;
+				case 3:	incluirCategoria();		break;
+				case 4:	excluirCategoria();		break;
+				case 5:	alterarCategoria();		break;
+				case 0:							break;
+				default:						break;
+			}
+			
+		}  while (opcaoCategoria != 0);
 	}
 
 	//------------------METODOS COM FILME
@@ -355,7 +455,7 @@ public class CRUD
 		id = Integer.valueOf(console.readLine());
 		if(id <= 0) return;
 
-		Categoria buscado = (Categoria)arqFilmes.buscar(id);
+		Categoria buscado = (Categoria)arqCategoria.buscar(id);
 
 		if(buscado != null)
 			System.out.println(buscado);
@@ -406,7 +506,7 @@ public class CRUD
 		}
 		else
 		{
-			System.out.println("Filme não incluído.");
+			System.out.println("Categoria não incluído.");
 		}
 
 		System.out.print("Pressione ENTER");
