@@ -32,14 +32,14 @@ public class Arquivo<T extends Registro>
 	private final int HEADER_SIZE = 4;
 	
 	/**
-	 * Cria arquivo de dados para a entidaded
-	 * @param _construtor Construtor da classe da entidade
+	 * Cria arquivo de dados para a entidade.
+	 * @param _classe Classe da entidade
 	 * @param _nomeArquivo Nome do arquivo
 	 * @throws Exception
 	 */
-	public Arquivo(Constructor<T> _construtor, String _nomeArquivo) throws Exception
+	public Arquivo(Class<T> _classe, String _nomeArquivo) throws Exception
 	{
-		construtor = _construtor;
+		construtor = _classe.getConstructor();
 		nomeArquivo = _nomeArquivo;
 
 		T obj = construtor.newInstance();
@@ -64,9 +64,21 @@ public class Arquivo<T extends Registro>
 	 * @return ID do um registro
 	 * @throws Exception
 	 */
-	public int incluir(T _obj) throws Exception
+	public int incluir(T _obj)
 	{
-		return incluir(_obj, 0, arquivo.length());
+		int id = -1;
+		
+		try
+		{
+			id = incluir(_obj, 0, arquivo.length());
+		}
+		
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return id;
 	}
 
 	/**
@@ -75,34 +87,41 @@ public class Arquivo<T extends Registro>
 	 * @param _lixo Tamanho do lixo após o registro
 	 * @param _pos Posição a ser escrita
 	 * @return ID do um registro
-	 * @throws Exception
 	 */
-	private int incluir(T _obj, int _lixo, long _pos) throws Exception
+	private int incluir(T _obj, int _lixo, long _pos)
 	{
-		if (_obj.getID() <= 0)
+		try
 		{
-			arquivo.seek(0);
-			
-			int ultimoID = arquivo.readInt() + 1;
-			_obj.setID(ultimoID);
-			
-			arquivo.seek(0);
-			arquivo.writeInt(ultimoID);
+			if (_obj.getID() <= 0)
+			{
+				arquivo.seek(0);
+				
+				int ultimoID = arquivo.readInt() + 1;
+				_obj.setID(ultimoID);
+				
+				arquivo.seek(0);
+				arquivo.writeInt(ultimoID);
 
-			inserirIndex(_obj.getID(), _pos);
+				inserirIndex(_obj.getID(), _pos);
+			}
+			else
+				alterarIndex(_obj.getID(), _pos);
+			
+			arquivo.seek(_pos);
+
+			arquivo.writeByte(' ');
+			byte[] byteArray = _obj.toByteArray();
+
+			arquivo.writeInt(byteArray.length); // Tamanho do registro
+			arquivo.write(byteArray);
+
+			arquivo.writeInt(_lixo);
 		}
-		else
-			alterarIndex(_obj.getID(), _pos);
 		
-		arquivo.seek(_pos);
-
-		arquivo.writeByte(' ');
-		byte[] byteArray = _obj.toByteArray();
-
-		arquivo.writeInt(byteArray.length); // Tamanho do registro
-		arquivo.write(byteArray);
-
-		arquivo.writeInt(_lixo);
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
 		return _obj.getID();
 	}
@@ -114,7 +133,7 @@ public class Arquivo<T extends Registro>
 	 * @return Array com os registros
 	 * @throws Exception
 	 */
-	public Object[] listar() throws Exception
+	public ArrayList<T> listar() throws Exception
 	{
 		ArrayList<T> lista = new ArrayList<>();
 
@@ -144,46 +163,53 @@ public class Arquivo<T extends Registro>
 			arquivo.skipBytes(arquivo.readInt()); // Pular o lixo
 		}
 		
-		return lista.toArray();
+		return lista;
 	}
 	
 	/**
 	 * Encontra um registro
 	 * @param _id ID do registro
 	 * @return Objeto genérico com os dados do registro
-	 * @throws Exception
 	 */
-	public Object buscar(int _id) throws Exception
+	public T buscar(int _id)
 	{
-		arquivo.seek(HEADER_SIZE);
-
-		byte lapide;
-		byte[] byteArray;
-		int size;
-		T obj = null;
-
-		long pos = getPosicao(_id);
-		
-
-		if (pos > 0)
+		try
 		{
-			arquivo.seek(pos);
+			arquivo.seek(HEADER_SIZE);
+
+			byte lapide;
+			byte[] byteArray;
+			int size;
+			T obj = null;
+
+			long pos = getPosicao(_id);
 			
-			lapide = arquivo.readByte();
 
-			if (lapide == ' ')
+			if (pos > 0)
 			{
-				obj = construtor.newInstance();
+				arquivo.seek(pos);
+				
+				lapide = arquivo.readByte();
 
-				size = arquivo.readInt();
+				if (lapide == ' ')
+				{
+					obj = construtor.newInstance();
 
-				byteArray = new byte[size];
+					size = arquivo.readInt();
 
-				arquivo.read(byteArray);
-				obj.fromByteArray(byteArray);
+					byteArray = new byte[size];
 
-				return obj;
+					arquivo.read(byteArray);
+					obj.fromByteArray(byteArray);
+
+					return obj;
+				}
 			}
+		}
+		
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 
 		return null;
@@ -193,18 +219,25 @@ public class Arquivo<T extends Registro>
 	 * Exclui um registro
 	 * @param _id ID do registro
 	 * @return Se excluiu
-	 * @throws Exception
 	 */
-	public boolean excluir(int _id) throws Exception
+	public boolean excluir(int _id)
 	{
 		long endereco = getPosicao(_id);
 
 		if (endereco < HEADER_SIZE)
 			return false;
 
-		arquivo.seek(endereco);
-		arquivo.writeByte('*');
-		alterarIndex(_id, -1);
+		try
+		{
+			arquivo.seek(endereco);
+			arquivo.writeByte('*');
+			alterarIndex(_id, -1);
+		}
+		
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 
 		return true;
 	}
@@ -229,31 +262,39 @@ public class Arquivo<T extends Registro>
 	 * @param _newPos Nova posição do registro
 	 * @return Se conseguiu fazer a alteração
 	 */
-	public boolean alterarIndex(int _id, long _newPos) throws Exception
+	public boolean alterarIndex(int _id, long _newPos)
 	{
 		if (_id < 1) return false;
 
-		long startPos = 0;
-		long endPos   = arquivoIndexId.length() / 12;
-		long indexPos = 0;
-		int idLido    = -1;
-
-		while (_id           != idLido &&
-			   startPos      <= endPos &&
-			   indexPos * 12 <= arquivoIndexId.length() - 12)
+		try
 		{
-			indexPos = startPos + ((endPos - startPos) / 2);
+			long startPos = 0;
+			long endPos   = arquivoIndexId.length() / 12;
+			long indexPos = 0;
+			int idLido    = -1;
 
-			arquivoIndexId.seek(indexPos * 12);
-			idLido = arquivoIndexId.readInt();
+			while (_id           != idLido &&
+				   startPos      <= endPos &&
+				   indexPos * 12 <= arquivoIndexId.length() - 12)
+			{
+				indexPos = startPos + ((endPos - startPos) / 2);
 
-			if      (_id < idLido) endPos   = indexPos - 1;
-			else if (idLido < _id) startPos = indexPos + 1;
+				arquivoIndexId.seek(indexPos * 12);
+				idLido = arquivoIndexId.readInt();
+
+				if      (_id < idLido) endPos   = indexPos - 1;
+				else if (idLido < _id) startPos = indexPos + 1;
+			}
+
+			if (idLido != _id) return false;
+
+			arquivoIndexId.writeLong(_newPos);
 		}
-
-		if (idLido != _id) return false;
-
-		arquivoIndexId.writeLong(_newPos);
+		
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 
 		return true;
 	}
@@ -262,42 +303,52 @@ public class Arquivo<T extends Registro>
 	 * Recupera a posição de um registro
 	 * @param _id ID do registro
 	 * @return Posição do registro
-	 * @throws Exception
 	 */
-	public long getPosicao(int _id) throws Exception
+	public long getPosicao(int _id)
 	{
-		if (_id < 1) return -1;
-
-		long startPos = 0;
-		long endPos   = arquivoIndexId.length() / 12;
-		long indexPos = 0;
-		int idLido    = -1;
-
-		while (_id           != idLido &&
-			   startPos      <= endPos &&
-			   indexPos * 12 <= arquivoIndexId.length() - 12)
+		long posicao = -1;
+		
+		try
 		{
-			indexPos = startPos + ((endPos - startPos) / 2);
+			if (_id < 1) return -1;
 
-			arquivoIndexId.seek(indexPos * 12);
-			idLido = arquivoIndexId.readInt();
+			long startPos = 0;
+			long endPos   = arquivoIndexId.length() / 12;
+			long indexPos = 0;
+			int idLido    = -1;
 
-			if      (_id < idLido) endPos   = indexPos - 1;
-			else if (idLido < _id) startPos = indexPos + 1;
+			while (_id           != idLido &&
+				   startPos      <= endPos &&
+				   indexPos * 12 <= arquivoIndexId.length() - 12)
+			{
+				indexPos = startPos + ((endPos - startPos) / 2);
+
+				arquivoIndexId.seek(indexPos * 12);
+				idLido = arquivoIndexId.readInt();
+
+				if      (_id < idLido) endPos   = indexPos - 1;
+				else if (idLido < _id) startPos = indexPos + 1;
+			}
+
+			if (idLido != _id) return -1;
+
+			posicao = arquivoIndexId.readLong();
 		}
-
-		if (idLido != _id) return -1;
-
-		return arquivoIndexId.readLong();
+		
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return posicao;
 	}
 
 	/**
 	 * Altera um registro
 	 * @param _obj Dados do registro
 	 * @return Se houve sucesso
-	 * @throws Exception
 	 */
-	public boolean alterar(T _obj) throws Exception
+	public boolean alterar(T _obj)
 	{
 		if (_obj.getID() <= 0)
 			return false;
@@ -307,25 +358,33 @@ public class Arquivo<T extends Registro>
 		if (endereco <= 0)
 			return false;
 
-		byte[] objData = _obj.toByteArray();
-
-		arquivo.seek(endereco);
-
-		arquivo.skipBytes(1);
-
-		int size = arquivo.readInt(); // Tamanho do registro
-
-		arquivo.skipBytes(size);
-		size += arquivo.readInt(); // O tamanho disponível é o tamanho do registro, mais o lixo após o registro
-
-		arquivo.seek(endereco);
-
-		if (size >= objData.length)
-			this.incluir(_obj, size - objData.length, endereco);
-		else
+		try
 		{
-			arquivo.writeByte('*');
-			this.incluir(_obj);
+			byte[] objData = _obj.toByteArray();
+
+			arquivo.seek(endereco);
+
+			arquivo.skipBytes(1);
+
+			int size = arquivo.readInt(); // Tamanho do registro
+
+			arquivo.skipBytes(size);
+			size += arquivo.readInt(); // O tamanho disponível é o tamanho do registro, mais o lixo após o registro
+
+			arquivo.seek(endereco);
+
+			if (size >= objData.length)
+				incluir(_obj, size - objData.length, endereco);
+			else
+			{
+				arquivo.writeByte('*');
+				incluir(_obj);
+			}
+		}
+		
+		catch (IOException e)
+		{
+			e.printStackTrace();
 		}
 
 		return true;
