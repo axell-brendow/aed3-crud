@@ -26,7 +26,7 @@ public class CrudCategoria extends CRUDAbstract<Categoria>
 		);
 	}
 
-	//------------------METODOS COM FILME
+	//------------------METODOS COM CATEGORIA
 
 	/**
 	 * Busca uma categoria presente no arquivo

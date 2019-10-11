@@ -60,8 +60,17 @@ public class CrudFilme extends CRUDAbstract<Filme>
 		{
 			IO.println("O id da Categoria não existe");
 			
-			//XXX:Serial legal adicionar uma opcao para perguntar se quer adicionar a categoria?
-			return;
+			String resposta = IO.readLine("\nGostaria de Inserir a categoria? ");
+			
+			if (resposta.isEmpty()) resposta = "n";
+			
+			confirma = resposta.charAt(0);
+
+			if(confirma == 's' || confirma == 'S')
+			{	
+				CrudCategoria aSerInserido = new CrudCategoria();
+				aSerInserido.incluirCategoria();
+			}
 		}
 
 		ano = IO.readshort("Ano: ");
