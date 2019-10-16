@@ -19,7 +19,10 @@ public interface Registro {
 	 * Recupera o nome da tabela
 	 * @return String com o nome da tabela
 	 */
-	public String getTableName();
+	public default String getTableName()
+	{
+		return this.getClass().getSimpleName();
+	}
 
 	/**
 	 * Converte o registro em um array de bytes, com seus dados
