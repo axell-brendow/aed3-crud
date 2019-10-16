@@ -31,7 +31,7 @@ public class CRUD
 	 */
 	public static void escolherMenus()
 	{
-		Menus.menu("PRINCIPAL", "",
+		Menus.menu("PRINCIPAL",
 			new String[]
 			{ "Filmes", "Categorias", "Povoar Banco de Dados", "Limpar Banco de Dados" },
 			new Runnable[]
