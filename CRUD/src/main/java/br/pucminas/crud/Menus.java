@@ -21,12 +21,11 @@ public class Menus
 		return contem;
 	}
 	
-	public static void gerarCabecalhoEOpcoes(String nome, String mensagem, String[] opcoes)
+	public static void gerarCabecalhoEOpcoes(String nome, String[] opcoes)
 	{
 		IO.println("\n\n------------------------------------------------");
 		IO.println("                    MENU " + nome);
-		IO.println("------------------------------------------------");
-		IO.println(mensagem);
+		IO.println("------------------------------------------------\n");
 		for (int i = 0; i < opcoes.length; i++)
 		{
 			IO.println((i + 1) + " - " + opcoes[i]);
@@ -35,14 +34,14 @@ public class Menus
 		IO.println("");
 	}
 	
-	public static <T> T menu(String nome, String mensagem, String[] opcoes, Function<Integer, T> gerenciarOpcoes, int[] opcoesDeSaida, boolean inverterLogicaDeSaida)
+	public static <T> T menu(String nome, String[] opcoes, Function<Integer, T> gerenciarOpcoes, int[] opcoesDeSaida, boolean inverterLogicaDeSaida)
 	{
 		T result = null;
 		int opcao = 0;
 		
 		do
 		{
-			gerarCabecalhoEOpcoes(nome, mensagem, opcoes);
+			gerarCabecalhoEOpcoes(nome, opcoes);
 			opcao = IO.readint("Opção: ");
 			
 			IO.println("");
@@ -64,19 +63,19 @@ public class Menus
 		return result;
 	}
 	
-	public static <T> T menu(String nome, String mensagem, String[] opcoes, Function<Integer, T> gerenciarOpcoes, int[] opcoesDeSaida)
+	public static <T> T menu(String nome, String[] opcoes, Function<Integer, T> gerenciarOpcoes, int[] opcoesDeSaida)
 	{
-		return menu(nome, mensagem, opcoes, gerenciarOpcoes, opcoesDeSaida, false);
+		return menu(nome, opcoes, gerenciarOpcoes, opcoesDeSaida, false);
 	}
 	
-	public static <T> T menu(String nome, String mensagem, String[] opcoes, Function<Integer, T> gerenciarOpcoes)
+	public static <T> T menu(String nome, String[] opcoes, Function<Integer, T> gerenciarOpcoes)
 	{
-		return menu(nome, mensagem, opcoes, gerenciarOpcoes, new int[] { 0 });
+		return menu(nome, opcoes, gerenciarOpcoes, new int[] { 0 });
 	}
 
-	public static void menu(String nome, String mensagem, String[] opcoes, Runnable[] acoes, int[] opcoesDeSaida, boolean inverterLogicaDeSaida)
+	public static void menu(String nome, String[] opcoes, Runnable[] acoes, int[] opcoesDeSaida, boolean inverterLogicaDeSaida)
 	{
-		menu(nome, mensagem, opcoes,
+		menu(nome, opcoes,
 			(opcao) ->
 			{
 				acoes[opcao - 1].run();
@@ -87,24 +86,24 @@ public class Menus
 		);
 	}
 
-	public static void noBackMenu(String nome, String mensagem, String[] opcoes, Runnable[] acoes)
+	public static void noBackMenu(String nome, String[] opcoes, Runnable[] acoes)
 	{
-		menu(nome, mensagem, opcoes, acoes, new int[] {  }, true);
+		menu(nome, opcoes, acoes, new int[] {  }, true);
 	}
 
-	public static void menu(String nome, String mensagem, String[] opcoes, Runnable[] acoes, int[] opcoesDeSaida)
+	public static void menu(String nome, String[] opcoes, Runnable[] acoes, int[] opcoesDeSaida)
 	{
-		menu(nome, mensagem, opcoes, acoes, opcoesDeSaida, false);
+		menu(nome, opcoes, acoes, opcoesDeSaida, false);
 	}
 
-	public static void menu(String nome, String mensagem, String[] opcoes, Runnable[] acoes)
+	public static void menu(String nome, String[] opcoes, Runnable[] acoes)
 	{
-		menu(nome, mensagem, opcoes, acoes, new int[] { 0 });
+		menu(nome, opcoes, acoes, new int[] { 0 });
 	}
 	
-	public static <T> T menu(String nome, String mensagem, String[] opcoes, Supplier<T>[] acoes, int[] opcoesDeSaida, boolean inverterLogicaDeSaida)
+	public static <T> T menu(String nome, String[] opcoes, Supplier<T>[] acoes, int[] opcoesDeSaida, boolean inverterLogicaDeSaida)
 	{
-		return menu(nome, mensagem, opcoes,
+		return menu(nome, opcoes,
 			(opcao) ->
 			{
 				return acoes[opcao - 1].get();
@@ -114,19 +113,19 @@ public class Menus
 		);
 	}
 	
-	public static <T> T noBackMenu(String nome, String mensagem, String[] opcoes, Supplier<T>[] acoes, int[] opcoesDeSaida)
+	public static <T> T noBackMenu(String nome, String[] opcoes, Supplier<T>[] acoes, int[] opcoesDeSaida)
 	{
-		return menu(nome, mensagem, opcoes, acoes, new int[] {  }, true);
+		return menu(nome, opcoes, acoes, new int[] {  }, true);
 	}
 	
-	public static <T> T menu(String nome, String mensagem, String[] opcoes, Supplier<T>[] acoes, int[] opcoesDeSaida)
+	public static <T> T menu(String nome, String[] opcoes, Supplier<T>[] acoes, int[] opcoesDeSaida)
 	{
-		return menu(nome, mensagem, opcoes, acoes, opcoesDeSaida, false);
+		return menu(nome, opcoes, acoes, opcoesDeSaida, false);
 	}
 	
-	public static <T> T menu(String nome, String mensagem, String[] opcoes, Supplier<T>[] acoes)
+	public static <T> T menu(String nome, String[] opcoes, Supplier<T>[] acoes)
 	{
-		return menu(nome, mensagem, opcoes, acoes, new int[] { 0 });
+		return menu(nome, opcoes, acoes, new int[] { 0 });
 	}
 	
 }

@@ -13,11 +13,11 @@ public abstract class CRUDAbstract<ENTIDADE extends Registro>
 	
 	public CRUDAbstract(Class<ENTIDADE> _class)
 	{
-		nomeEntidade = _class.getName();
+		nomeEntidade = _class.getSimpleName();
 		
 		try
 		{
-			arquivo = new Arquivo<ENTIDADE>(_class, _class.getName() + ".db");
+			arquivo = new Arquivo<ENTIDADE>(_class, nomeEntidade + ".db");
 		}
 		
 		catch (Exception e)

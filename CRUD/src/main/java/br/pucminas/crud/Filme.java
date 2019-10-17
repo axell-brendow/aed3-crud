@@ -81,15 +81,20 @@ public class Filme implements Registro
 	{
         this.ano = _ano;
 	}
+    
+    public String categoria()
+    {
+    	return CRUD.crudCategoria.buscar(categoria).getNome();
+    }
 
 //---Outros metodos:
 
 	public String toString() 
 	{
-		return "\nID....:    " + this.id + 
-			   "\nTitulo:    " + this.titulo + 
-			   "\nCategoria: " + this.categoria + 
-			   "\nAno.:      " + this.ano;
+		return "\nID.......:    " + this.id + 
+			   "\nTitulo...:    " + this.titulo + 
+			   "\nCategoria:    " + categoria() + " (id: " + this.categoria + ")" + 
+			   "\nAno......:    " + this.ano;
 	}
 	
 	/**
