@@ -53,6 +53,11 @@ public class CrudFilme extends CRUDAbstract<Filme>
 		IO.println("\nINCLUSÃO");
 
 		titulo = IO.readLine("Título: ");
+		
+		IO.println ("Categorias Disponiveis:");
+		
+		CRUD.crudCategoria.listarEPrintar();
+		
 		idCategoria = IO.readint("Id Categoria: ");
 		
 		//Verificar se existe a categoria
@@ -60,7 +65,6 @@ public class CrudFilme extends CRUDAbstract<Filme>
 		{
 			IO.println("O id da Categoria não existe");
 			
-			//XXX:Serial legal adicionar uma opcao para perguntar se quer adicionar a categoria?
 			return;
 		}
 

@@ -81,6 +81,8 @@ public abstract class CRUDAbstract<ENTIDADE extends Registro>
 		
 		lista.forEach( (entidade) -> IO.println(entidade) );
 
+		if (lista.isEmpty()) IO.println(nomeEntidade + " esta vazia!");
+		
 		IO.pause();
 		
 		return lista;
