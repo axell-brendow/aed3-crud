@@ -4,8 +4,11 @@ import java.io.*;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
+import hash.Hash;
+
 public class Arquivo<T extends Registro>
 {
+//	public Hash<Integer, Long> hash;
 	/**
 	 * Nome do arquivo
 	 */
