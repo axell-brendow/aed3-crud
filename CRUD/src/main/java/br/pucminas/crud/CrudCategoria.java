@@ -10,7 +10,7 @@ public class CrudCategoria extends CRUDAbstract<Categoria>
 	@Override
 	public void printarMenu()
 	{
-		Menus.menu("CATEGORIAS", "",
+		Menus.menu("CATEGORIAS",
 			new String[]
 			{
 				"Listar categorias", "Buscar categoria", "Incluir categoria",
@@ -54,7 +54,7 @@ public class CrudCategoria extends CRUDAbstract<Categoria>
 
 		nome = IO.readLine("Nome: ");
 		
-		String resposta = IO.readLine("\nConfirma inclusão? ");
+		String resposta = IO.readLine("\nConfirma inclusão (s-n)? ");
 		
 		if (resposta.isEmpty()) resposta = "n";
 		
@@ -92,7 +92,7 @@ public class CrudCategoria extends CRUDAbstract<Categoria>
 		{
 			IO.println(aSerExcluida);
 
-			String resposta = IO.readLine("\nConfirma exclusão? ");
+			String resposta = IO.readLine("\nConfirma exclusão (s-n)? ");
 			
 			if (resposta.isEmpty()) resposta = "n";
 			
@@ -140,7 +140,7 @@ public class CrudCategoria extends CRUDAbstract<Categoria>
 		if (nome.equals(" "))
 			nome = aSerAlterada.getNome();
 
-		String resposta = IO.readLine("\nConfirma alteração? ");
+		String resposta = IO.readLine("\nConfirma alteração (s-n)? ");
 		
 		if (resposta.isEmpty()) resposta = "n";
 		

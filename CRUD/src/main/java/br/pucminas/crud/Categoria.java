@@ -51,13 +51,6 @@ public class Categoria implements Registro {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	@Override
-	public String getTableName()
-	{
-		
-		return getClass().getName();
-	}
 
 	@Override
 	public byte[] toByteArray() throws IOException

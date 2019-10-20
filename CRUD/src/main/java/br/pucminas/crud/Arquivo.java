@@ -463,7 +463,10 @@ public class Arquivo<T extends Registro>
 		newArquivo.close();
 		arquivo.close();
 
+		
 		File tmpF = new File("dados/tmp.db");
+		new File("dados/" + nomeArquivo).delete();
+		
 		tmpF.renameTo(new File("dados/" + nomeArquivo));
 
 		arquivo = new RandomAccessFile("dados/" + nomeArquivo, "rw");

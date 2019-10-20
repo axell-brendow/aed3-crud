@@ -10,7 +10,7 @@ public class CrudFilme extends CRUDAbstract<Filme>
 	@Override
 	public void printarMenu()
 	{
-		Menus.menu("FILMES", "",
+		Menus.menu("FILMES",
 			new String[]
 			{ "Listar filmes", "Buscar filme", "Incluir filme", "Excluir filme", "Modificar filme" },
 			new Runnable[]
@@ -53,7 +53,12 @@ public class CrudFilme extends CRUDAbstract<Filme>
 		IO.println("\nINCLUSÃO");
 
 		titulo = IO.readLine("Título: ");
-		idCategoria = IO.readint("Categoria: ");
+		
+		IO.println ("Categorias Disponiveis:");
+		
+		CRUD.crudCategoria.listarEPrintar();
+		
+		idCategoria = IO.readint("Id Categoria: ");
 		
 		//Verificar se existe a categoria
 		if (CRUD.crudCategoria.buscar(idCategoria) == null)
@@ -75,7 +80,7 @@ public class CrudFilme extends CRUDAbstract<Filme>
 
 		ano = IO.readshort("Ano: ");
 
-		String resposta = IO.readLine("\nConfirma inclusão? ");
+		String resposta = IO.readLine("\nConfirma inclusão (s-n)? ");
 		
 		if (resposta.isEmpty()) resposta = "n";
 		
@@ -113,7 +118,7 @@ public class CrudFilme extends CRUDAbstract<Filme>
 		{
 			IO.println(aSerExcluido);
 
-			String resposta = IO.readLine("\nConfirma exclusão? ");
+			String resposta = IO.readLine("\nConfirma exclusão (s-n)? ");
 			
 			if (resposta.isEmpty()) resposta = "n";
 			
@@ -173,7 +178,7 @@ public class CrudFilme extends CRUDAbstract<Filme>
 
 		if (ano == -1) ano = aSerAlterado.getAno();
 
-		String resposta = IO.readLine("\nConfirma alteração? ");
+		String resposta = IO.readLine("\nConfirma alteração (s-n)? ");
 		
 		if (resposta.isEmpty()) resposta = "n";
 		
