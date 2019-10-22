@@ -25,7 +25,7 @@ public class Arquivo<T extends Registro>
 	/**
 	 * Hash do arquivo
 	 */
-	public Hash<?, ?> arquivoHash;
+	public Hash<Integer, Long> arquivoHash;
 
 	/**
 	 * Construtor da classe genérica
@@ -57,7 +57,7 @@ public class Arquivo<T extends Registro>
 
 		arquivo        = new RandomAccessFile("dados/" + nomeArquivo, "rw"); // Abrir o arquivo
 		arquivoIndexId = new RandomAccessFile("dados/" + obj.getTableName() + "_idIndex.db", "rw"); // Abrir o arquivo de index
-		arquivoHash	   = new Hash<Integer, Long>("dados/Hash" + nomeArquivo, "Buckets.db", 5,Integer.class, Long.class);
+		arquivoHash	   = new Hash<>("dados/Hash" + nomeArquivo, "Buckets.db", 5,Integer.class, Long.class);
 
 		// Se o arquivo for menor do que o tamanho do cabeçalho, logo não possuir cabeçalho
 		// Escreve 0 para representar o último ID utilizado
@@ -95,6 +95,7 @@ public class Arquivo<T extends Registro>
 	 * @param _pos Posição a ser escrita
 	 * @return ID do um registro
 	 */
+	@SuppressWarnings("deprecation")
 	private int incluir(T _obj, int _lixo, long _pos)
 	{
 		try
@@ -124,7 +125,7 @@ public class Arquivo<T extends Registro>
 
 			arquivo.writeInt(_lixo);
 			
-			arquivoHash.inserir(new Integer(_obj.getID()), new Long(_pos));
+			arquivoHash.inserir(Integer.valueOf(_obj.getID()), Long.valueOf(_pos));
 		}
 		
 		catch (Exception e)
