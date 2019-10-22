@@ -3,6 +3,7 @@ package br.pucminas.crud;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import hash.Hash;
 
 public class Arquivo<T extends Registro>
 {
@@ -20,6 +21,11 @@ public class Arquivo<T extends Registro>
 	 * Index do arquivo
 	 */
 	public RandomAccessFile arquivoIndexId;
+	
+	/**
+	 * Hash do arquivo
+	 */
+	public Hash<?, ?> arquivoHash;
 
 	/**
 	 * Construtor da classe genérica
@@ -51,6 +57,7 @@ public class Arquivo<T extends Registro>
 
 		arquivo        = new RandomAccessFile("dados/" + nomeArquivo, "rw"); // Abrir o arquivo
 		arquivoIndexId = new RandomAccessFile("dados/" + obj.getTableName() + "_idIndex.db", "rw"); // Abrir o arquivo de index
+		arquivoHash	   = new Hash<Integer, Long>("dados/Hash" + nomeArquivo, "Buckets.db", 5,Integer.class, Long.class);
 
 		// Se o arquivo for menor do que o tamanho do cabeçalho, logo não possuir cabeçalho
 		// Escreve 0 para representar o último ID utilizado
@@ -116,6 +123,8 @@ public class Arquivo<T extends Registro>
 			arquivo.write(byteArray);
 
 			arquivo.writeInt(_lixo);
+			
+			arquivoHash.inserir(new Integer(_obj.getID()), new Long(_pos));
 		}
 		
 		catch (Exception e)

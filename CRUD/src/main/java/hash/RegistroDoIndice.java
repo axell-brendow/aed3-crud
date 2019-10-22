@@ -49,6 +49,7 @@ public class RegistroDoIndice<TIPO_DAS_CHAVES, TIPO_DOS_DADOS> implements Serial
 	 *
 	 * @return a quantidade máxima de bytes que objetos dessa classe gastam.
 	 */
+	@SuppressWarnings("deprecation")
 	private short obterTamanhoMaximoEmBytes(Class<?> classe)
 	{
 		int tamanho = -1;
@@ -315,6 +316,7 @@ public class RegistroDoIndice<TIPO_DAS_CHAVES, TIPO_DOS_DADOS> implements Serial
 	 * @param nomeCampo Nome do campo desta classe que contém o objeto.
 	 * @param classe Classe do objeto.
 	 */
+	@SuppressWarnings("deprecation")
 	private void lerBytes(byte[] array, String nomeCampo, Class<?> classe)
 	{
 		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(array);
@@ -388,6 +390,7 @@ public class RegistroDoIndice<TIPO_DAS_CHAVES, TIPO_DOS_DADOS> implements Serial
 	 * @param nomeCampo Nome do campo nesta classe.
 	 * @param classe Classe do campo.
 	 */
+	@SuppressWarnings("deprecation")
 	private void newInstance(String nomeCampo, Class<?> classe)
 	{
 		Field field;
